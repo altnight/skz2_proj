@@ -1,0 +1,39 @@
+スカンディナヴィア半島2
+環境
+  Django
+  Tweepy
+    Google Appsはちょっとつらい
+  Debian
+  さくらVPS
+  gunicorn
+  nginx
+機能
+  t.co展開
+  bitlay展開
+  キーボードショートカット
+   フィルタリング機能
+    レートわけ、レートでリスト作成
+      レートは3段階
+        undef合わせると4つ
+    あとはリストのめんばーでフィルタリング
+    リストのメンバーから振り分けを作成
+  api limit表示
+  発言, reply, fav, RT 非公式RTできる
+    ngword指定できる
+    抽出できたらいいかも
+  マルチカラムで表示切り替えをする
+UI
+  jQuery
+    jQueryUI
+  TwitterBootStrap
+    つかわない
+  padding詰める
+    できなければWindowを左右にスクロールする機能(like tweetdeck)
+  header
+    twitterのtweetボタンをつける
+実装
+  OAuth
+  すべてのstatus_objectをDBにいれておく
+    任意のリストを読み込む
+      reload intervalを設定できる
+    UserStream
