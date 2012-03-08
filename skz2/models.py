@@ -8,7 +8,7 @@ class Tweet(models.Model):
     text = models.CharField(u"本文", max_length=140)
     in_reply_to = models.CharField(u"in_reply_to", max_length=30)
     since_id = models.CharField(u"since_id", max_length=30)
-    favorited = models.BooleanField(u"fav", default=false)
+    favorited = models.BooleanField(u"fav")
     created_at = models.CharField(u'作成日時', max_length=40)
 
     def __unicode__(self):
