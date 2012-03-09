@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<head>
+<html lang="ja">
+<title>{% block title %}{% endblock %}</title>
+	<meta charset="UTF-8">
+</head>
+<body>
+<div id="all">
+  {% block header %}
+    <div id='header'>
+      <h1>スカンディナヴィア半島2</h1>
+    </div>
+    <ul>
+    	<li> {{ display_user.name }}</li>
+    	<li> <a href="{% url index %}">index</a></li>
+      <!--<li> <a href="{% url bookmark_add %}">新規ブクマ</a></li>-->
+      <!--<li> <a href="{% url timeline %}">timeline</a></li>-->
+      <!--<li> <a href="{% url login %}">login</a></li>-->
+      <!--<li> <a href="{% url logout %}">logout</a></li>-->
+    </ul>
+  {% endblock %}
+    <div id="main">
+  {% block content %}{% endblock %}
+    </div>
+  {% block hooter%}
+  <div id='footer'>
+    アハーン
+  </div>
+  {% endblock %}
+</div>
+</body>

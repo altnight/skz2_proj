@@ -10,20 +10,65 @@ from django.views.generic.simple import direct_to_template
 import tweepy
 from see import see
 
-#from yonda.forms import *
-#from yonda.models import *
-#from yonda.tools import use_username_or_masuda
+CONSUMER_KEY = ''
+CONSUMER_SECRET = ''
+CALLBACK_URL = ''
 
 def index(request):
-    """トップページ"""
-    #loginしてるとき
+    if request.session.get('session_user'):
+        return direct_to_template(request, "skz2.html",{'skz2':skz2})
+    else:
+        return direct_to_template(request, 'index.html',{})
+
+def login(request):
     if request.method == "GET":
-        return direct_to_template(request, "index.html", {"form":UrlPostForm()})
+        return direct_to_template(request, 'login.html',{'form':LoginForm()})
     if request.method == "POST":
-        form = UrlPostForm(request.POST)
+        form = LoginForm(request.POST)
         if not form.is_valid():
             return HttpResponseRedirect(reverse('index'))
-        user = use_username_or_masuda(request)
-        Url.post_url(form.cleaned_data["url"], user)
+        #存在しないユーザーならindexに戻す
+        if not User.objects.filter(name=request.POST.get('name')).count():
+            return HttpResponseRedirect(reverse('index'))
+        request.session['session_user'] = request.POST.get('name')
         return HttpResponseRedirect(reverse('index'))
 
+def logout(request):
+    if request.session.get('session_user'):
+        del request.session['session_user']
+    return HttpResponseRedirect(reverse('index'))
+
+def get_oauth(request):
+    '''OAuthを取り付ける最初のステップ'''
+    #CONSUMER_KEY,CONSUMER_SECRETを設定
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET, CALLBACK_URL)
+    try:
+        auth_url = auth.get_authorization_url()
+    except tweepy.TweepError:
+        print '401 Error! Failed to get request token.'
+    request.session['request_token'] = (auth.request_token.key, auth.request_token.secret)
+    return HttpResponseRedirect(auth_url)
+
+def callback(request):
+    ''' Callback '''
+    #コールバックで戻ってくる
+    auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+
+    token = request.session.get('request_token')
+    del request.session['request_token']
+    auth.set_request_token(token[0], token[1])
+
+    verifier = request.GET.get('oauth_verifier')
+    try:
+        auth.get_access_token(verifier)
+    except tweepy.TweepError:
+        print 'Error! Failed to get access token.'
+
+    request.session['key'] = auth.access_token.key
+    request.session['secret'] = auth.access_token.secret
+
+    if User.objects.filter(access_token_key=request.session.get('key')).count():
+        signuped_user = User.objects.get(access_token_key=request.session.get('key'))
+        request.session['session_user'] = signuped_user.name
+        return HttpResponseRedirect(reverse('index'))
+    return HttpResponseRedirect(reverse('create_profile'))
