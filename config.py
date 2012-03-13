@@ -4,4 +4,4 @@ class TwitterOAuth(object):
     callback_url = ''
 
 class Domain(object):
-    domain = ''
+    domain = 'hoge'
