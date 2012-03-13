@@ -7,7 +7,9 @@ ADMINS = (
     # ('Your Name', 'your_email@example.com'),
 )
 
-DOMAIN = "http://192.168.56.101:8000"
+from config import Domain
+DOMAIN = Domain.domain
+
 MANAGERS = ADMINS
 import os
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
