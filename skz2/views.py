@@ -37,9 +37,9 @@ def callback(request):
     #コールバックで戻ってくる
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 
-    token = request.session.get('request_token')
+    #token = request.session.get('request_token')
     del request.session['request_token']
-    auth.set_request_token(token[0], token[1])
+    #auth.set_request_token(token[0], token[1])
 
     verifier = request.GET.get('oauth_verifier')
     try:

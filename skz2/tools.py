@@ -7,7 +7,7 @@ import tweepy
 
 CONSUMER_KEY = TwitterOAuth.consumer_key
 CONSUMER_SECRET = TwitterOAuth.consumer_secret
-CALLBACK_URL = TwitterOAuth.callback_url
+#CALLBACK_URL = TwitterOAuth.callback_url
 
 def setOAuth(request):
     user = User.objects.get(name=request.session.get('session_user'))
