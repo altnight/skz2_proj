@@ -37,9 +37,9 @@ def callback(request):
     #コールバックで戻ってくる
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
 
-    #token = request.session.get('request_token')
+    token = request.session.get('request_token')
     del request.session['request_token']
-    #auth.set_request_token(token[0], token[1])
+    auth.set_request_token(token[0], token[1])
 
     verifier = request.GET.get('oauth_verifier')
     try:
@@ -47,13 +47,13 @@ def callback(request):
     except tweepy.TweepError:
         print 'Error! Failed to get access token.'
 
-    if User.objects.filter(name = auth.get_username()):
+    if User.objects.filter(name = auth.get_username()).count():
         new_user = User.objects.get(name=auth.get_username())
-        new_user.access_token_key = auth.access_token.key,
-        new_user.access_token_secret= auth.access_token.secret,
+        new_user.access_token = auth.access_token.key
+        new_user.access_token_secret = auth.access_token.secret
     else:
         new_user = User(name = auth.get_username(),
-                        access_token_key = auth.access_token.key,
+                        access_token = auth.access_token.key,
                         access_token_secret = auth.access_token.secret,
                        )
     new_user.save()
@@ -61,6 +61,7 @@ def callback(request):
     return HttpResponseRedirect(reverse("index"))
 
 def get_home_timeline(request):
+    #import pdb;pdb.set_trace()
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     home_timeline = api.home_timeline(count=100)

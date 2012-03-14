@@ -5,7 +5,7 @@ class User(models.Model):
     name = models.CharField(u"ユーザー固有のID", max_length=10)
     ctime = models.DateTimeField(u'登録日時',auto_now_add=True, editable=False)
     atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
-    access_token_key = models.CharField(u'access_token_key',max_length=255)
+    access_token = models.CharField(u'access_token',max_length=255)
     access_token_secret = models.CharField(u'access_token_secret',max_length=255)
     is_active = models.BooleanField(default=True)
 
