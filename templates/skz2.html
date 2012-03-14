@@ -1,0 +1,11 @@
+{% extends 'base.html'%}
+{% block title %}スカンディナヴィア半島2{% endblock %}
+{% block content %}
+  <h2>スカンディナヴィア半島</h2>
+  <a href="{% url get_home_timeline %}">home_timeline</a>
+  <ul>
+  {% for obj in tweets %}
+  	<li>{{ obj.user.screen_name }} {{ obj.text }}</li>
+  {% endfor %}
+  </ul>
+{% endblock %}

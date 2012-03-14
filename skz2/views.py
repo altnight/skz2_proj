@@ -3,37 +3,23 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 #from django.shortcuts import get_object_or_404
+
+from skz2.models import User
+
 import tweepy
 from see import see
 
 from config import TwitterOAuth
+from skz2.tools import setOAauth
 CONSUMER_KEY = TwitterOAuth.consumer_key
 CONSUMER_SECRET = TwitterOAuth.consumer_secret
 CALLBACK_URL = TwitterOAuth.callback_url
 
 def index(request):
     if request.session.get('session_user'):
-        return direct_to_template(request, "skz2.html",{'skz2':skz2})
+        return direct_to_template(request, "skz2.html",{})
     else:
         return direct_to_template(request, 'index.html',{})
-
-def login(request):
-    if request.method == "GET":
-        return direct_to_template(request, 'login.html',{'form':LoginForm()})
-    if request.method == "POST":
-        form = LoginForm(request.POST)
-        if not form.is_valid():
-            return HttpResponseRedirect(reverse('index'))
-        #存在しないユーザーならindexに戻す
-        if not User.objects.filter(name=request.POST.get('name')).count():
-            return HttpResponseRedirect(reverse('index'))
-        request.session['session_user'] = request.POST.get('name')
-        return HttpResponseRedirect(reverse('index'))
-
-def logout(request):
-    if request.session.get('session_user'):
-        del request.session['session_user']
-    return HttpResponseRedirect(reverse('index'))
 
 def get_oauth(request):
     '''OAuthを取り付ける最初のステップ'''
@@ -61,11 +47,24 @@ def callback(request):
     except tweepy.TweepError:
         print 'Error! Failed to get access token.'
 
-    request.session['key'] = auth.access_token.key
-    request.session['secret'] = auth.access_token.secret
+    request.session['access_token_key'] = auth.access_token.key
+    request.session['access_token_secret'] = auth.access_token.secret
 
-    if User.objects.filter(access_token_key=request.session.get('key')).count():
-        signuped_user = User.objects.get(access_token_key=request.session.get('key'))
-        request.session['session_user'] = signuped_user.name
-        return HttpResponseRedirect(reverse('index'))
-    return HttpResponseRedirect(reverse('create_profile'))
+    if User.objects.filter(name=auth.get_username()):
+        new_user = User.objects.get(name=auth.get_username())
+        new_user.access_token_key = request.session.get('access_token_key')
+        new_user.access_token_secret= request.session.get('access_token_secret')
+    else:
+        new_user = User(name=auth.get_username(),
+                        access_token_key=request.session.get('access_token_key'),
+                        access_token_secret=request.session.get('access_token_secret'),
+                       )
+    new_user.save()
+    request.session['session_user'] = new_user
+    return HttpResponseRedirect(reverse("index"))
+
+def get_home_timeline(request):
+    auth = setOAauth(request)
+    api = tweepy.API(auth_handler=auth)
+    home_timeline = api.home_timeline()
+    return direct_to_template(request, "skz2.html", {"tweets":home_timeline})
