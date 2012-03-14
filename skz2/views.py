@@ -4,10 +4,11 @@ from django.http import HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 #from django.shortcuts import get_object_or_404
 
-from skz2.models import User
+from skz2.models import User, Tweet
 
 import tweepy
 from see import see
+import datetime
 
 from config import TwitterOAuth
 from skz2.tools import setOAuth
@@ -65,4 +66,16 @@ def get_home_timeline(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     home_timeline = api.home_timeline(count=100)
-    return direct_to_template(request, "skz2.html", {"tweets":home_timeline})
+    for i in home_timeline:
+        t = Tweet(user_id = i.user.id_str,
+                  name = i.user.name,
+                  screen_name = i.user.screen_name,
+                  text = i.text,
+                  in_reply_to_status_id = i.in_reply_to_status_id,
+                  favorited = i.favorited,
+                  created_at = i.created_at + datetime.timedelta(0, 3600*9),
+                  protected = i.user.protected,
+                 )
+        t.save()
+    tm = Tweet.objects.all()[:100]
+    return direct_to_template(request, "skz2.html", {"tweets":tm})

@@ -13,6 +13,4 @@ def setOAuth(request):
     user = User.objects.get(name=request.session.get('session_user'))
     auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
     auth.set_access_token(user.access_token, user.access_token_secret)
-    print user.access_token
-    print user.access_token_secret
     return auth
