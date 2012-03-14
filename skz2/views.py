@@ -10,7 +10,7 @@ import tweepy
 from see import see
 
 from config import TwitterOAuth
-from skz2.tools import setOAauth
+from skz2.tools import setOAuth
 CONSUMER_KEY = TwitterOAuth.consumer_key
 CONSUMER_SECRET = TwitterOAuth.consumer_secret
 CALLBACK_URL = TwitterOAuth.callback_url
@@ -47,24 +47,21 @@ def callback(request):
     except tweepy.TweepError:
         print 'Error! Failed to get access token.'
 
-    request.session['access_token_key'] = auth.access_token.key
-    request.session['access_token_secret'] = auth.access_token.secret
-
-    if User.objects.filter(name=auth.get_username()):
+    if User.objects.filter(name = auth.get_username()):
         new_user = User.objects.get(name=auth.get_username())
-        new_user.access_token_key = request.session.get('access_token_key')
-        new_user.access_token_secret= request.session.get('access_token_secret')
+        new_user.access_token_key = auth.access_token.key,
+        new_user.access_token_secret= auth.access_token.secret,
     else:
-        new_user = User(name=auth.get_username(),
-                        access_token_key=request.session.get('access_token_key'),
-                        access_token_secret=request.session.get('access_token_secret'),
+        new_user = User(name = auth.get_username(),
+                        access_token_key = auth.access_token.key,
+                        access_token_secret = auth.access_token.secret,
                        )
     new_user.save()
     request.session['session_user'] = new_user
     return HttpResponseRedirect(reverse("index"))
 
 def get_home_timeline(request):
-    auth = setOAauth(request)
+    auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline()
+    home_timeline = api.home_timeline(count=100)
     return direct_to_template(request, "skz2.html", {"tweets":home_timeline})
