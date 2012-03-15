@@ -13,6 +13,7 @@
        <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}({{ obj.name }})</a>:{{ obj.text }}
      {% endif %}
      <a href="http://twitter.com/#!/{{ obj.screen_name }}/status/{{ obj.status_id }}">{{ obj.created_at }}</a>
+     from:<a href="{{ obj.source_url }}">{{ obj.source }}</a>
     </li>
   {% endfor %}
   </ul>

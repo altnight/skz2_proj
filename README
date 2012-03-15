@@ -2,11 +2,10 @@
 環境
   Django
   Tweepy
-    Google Appsはちょっとつらい
-  Debian
-  さくらVPS
   gunicorn
   nginx
+  Debian
+  さくらVPS
 機能
   t.co展開
   bitlay展開
@@ -25,8 +24,8 @@
 UI
   jQuery
     jQueryUI
-  TwitterBootStrap
-    つかわない
+  CoffeeScript
+  Sass
   padding詰める
     できなければWindowを左右にスクロールする機能(like tweetdeck)
   header
@@ -36,4 +35,6 @@ UI
   すべてのstatus_objectをDBにいれておく
     任意のリストを読み込む
       reload intervalを設定できる
-    UserStream
+    #UserStream
+  textのパース
+  リストの一覧を取ってくる、リストを読み込む

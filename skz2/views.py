@@ -78,8 +78,9 @@ def get_home_timeline(request):
                   favorited = i.favorited,
                   created_at = i.created_at + datetime.timedelta(0, 3600*9),
                   protected = i.user.protected,
+                  source = i.source,
+                  source_url = i.source_url,
                  )
         t.save()
-    print request.session.get('since_id')
     tm = Tweet.objects.all().order_by('-created_at')[:100]
     return direct_to_template(request, "skz2.html", {"tweets":tm})
