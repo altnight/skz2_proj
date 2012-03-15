@@ -10,6 +10,7 @@ import tweepy
 from see import see
 import datetime
 import re
+from requests import get
 
 from config import TwitterOAuth
 from skz2.tools import setOAuth
@@ -66,16 +67,26 @@ def get_home_timeline(request):
     #import pdb;pdb.set_trace()
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'))
+    home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'), include_entities=True)
     for i in home_timeline:
         text = i.text
+
+        for url in i.entities['urls']:
+            if url is None:
+                continue
+            elif re.search(r't\.co', text):
+                for ii in i.entities['urls']:
+                    text = re.sub(r'https?://t\.co/[\w_\.\/]+', ii['expanded_url'], text)
+
+
         #if i == home_timeline[0]:
             #request.session['since_id'] = i.id_str
         user =  re.search(r'(@[\w]+)', text)
         if user is None:
             pass
         else:
-            print user.group(1)
+            pass
+            #print user.group(1)
             #text = text.replace(user.group(1), '<a href="http://twitter.com/#!/"+i.user.screen_name>user.group(1)</a>')
             #text = re.sub(r'https?://[\w_\.\/]+', '<a href="https://twitter.com/#!/">user.group(1)</a>' text)
 
@@ -83,7 +94,8 @@ def get_home_timeline(request):
         if hashtag is None:
             pass
         else:
-            print hashtag.group(1)
+            pass
+            #print hashtag.group(1)
             #text = '<a href="https://twitter.com/#!/search/"'+hashtag.group(1)+ '>'+hashtag.group(1) +"</a>"
             #text = "<a href=%s>%s</a>" % ("https://twitter.com/#!/search/", hashtag.group(1))
         t = Tweet(user_id = i.user.id_str,
