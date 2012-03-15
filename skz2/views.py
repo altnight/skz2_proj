@@ -9,6 +9,7 @@ from skz2.models import User, Tweet
 import tweepy
 from see import see
 import datetime
+import re
 
 from config import TwitterOAuth
 from skz2.tools import setOAuth
@@ -65,8 +66,9 @@ def get_home_timeline(request):
     #import pdb;pdb.set_trace()
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'))
+    home_timeline = api.home_timeline(count = 50,since_id = request.session.get('since_id'))
     for i in home_timeline:
+        #text = i.text
         if i == home_timeline[0]:
             request.session['since_id'] = i.id_str
         t = Tweet(user_id = i.user.id_str,
