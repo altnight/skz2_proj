@@ -74,13 +74,14 @@ def get_home_timeline(request):
         for url in i.entities['urls']:
             if url is None:
                 continue
-            elif re.search(r't\.co', text):
+            else:
                 for ii in i.entities['urls']:
-                    text = re.sub(r'https?://t\.co/[\w_\.\/]+', ii['expanded_url'], text)
+                    if re.search(ii['url'], text):
+                        text = re.sub(ii['url'], ii['expanded_url'], text)
 
 
-        #if i == home_timeline[0]:
-            #request.session['since_id'] = i.id_str
+        if i == home_timeline[0]:
+            request.session['since_id'] = i.id_str
         user =  re.search(r'(@[\w]+)', text)
         if user is None:
             pass
