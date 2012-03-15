@@ -83,13 +83,6 @@ def get_home_timeline(request):
         if i == home_timeline[0]:
             request.session['since_id'] = i.id_str
 
-        #user =  re.search(r'(@[\w]+)', text)
-        #if user is None:
-            #pass
-        #else:
-            #print user.group(1)
-            #text = text.replace(user.group(1), '<a href="http://twitter.com/#!/"+i.user.screen_name>user.group(1)</a>')
-            #text = re.sub(r'https?://[\w_\.\/]+', '<a href="https://twitter.com/#!/">user.group(1)</a>' text)
 
         hashtag =  re.search(r'(#[\w一-龠ぁ-んァ-ヴー]+)', text)
         if hashtag is None:
