@@ -66,16 +66,31 @@ def get_home_timeline(request):
     #import pdb;pdb.set_trace()
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count = 50,since_id = request.session.get('since_id'))
+    home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'))
     for i in home_timeline:
-        #text = i.text
-        if i == home_timeline[0]:
-            request.session['since_id'] = i.id_str
+        text = i.text
+        #if i == home_timeline[0]:
+            #request.session['since_id'] = i.id_str
+        user =  re.search(r'(@[\w]+)', text)
+        if user is None:
+            pass
+        else:
+            print user.group(1)
+            #text = text.replace(user.group(1), '<a href="http://twitter.com/#!/"+i.user.screen_name>user.group(1)</a>')
+            #text = re.sub(r'https?://[\w_\.\/]+', '<a href="https://twitter.com/#!/">user.group(1)</a>' text)
+
+        hashtag =  re.search(r'(#[\w一-龠ぁ-んァ-ヴー]+)', text)
+        if hashtag is None:
+            pass
+        else:
+            print hashtag.group(1)
+            #text = '<a href="https://twitter.com/#!/search/"'+hashtag.group(1)+ '>'+hashtag.group(1) +"</a>"
+            #text = "<a href=%s>%s</a>" % ("https://twitter.com/#!/search/", hashtag.group(1))
         t = Tweet(user_id = i.user.id_str,
                   status_id = i.id_str,
                   name = i.user.name,
                   screen_name = i.user.screen_name,
-                  text = i.text,
+                  text = text,
                   in_reply_to_status_id = i.in_reply_to_status_id,
                   favorited = i.favorited,
                   created_at = i.created_at + datetime.timedelta(0, 3600*9),
