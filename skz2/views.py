@@ -65,8 +65,10 @@ def get_home_timeline(request):
     #import pdb;pdb.set_trace()
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count=100)
+    home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'))
     for i in home_timeline:
+        if i == home_timeline[0]:
+            request.session['since_id'] = i.id_str
         t = Tweet(user_id = i.user.id_str,
                   status_id = i.id_str,
                   name = i.user.name,
@@ -78,5 +80,6 @@ def get_home_timeline(request):
                   protected = i.user.protected,
                  )
         t.save()
+    print request.session.get('since_id')
     tm = Tweet.objects.all().order_by('-created_at')[:100]
     return direct_to_template(request, "skz2.html", {"tweets":tm})
