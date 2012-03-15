@@ -64,7 +64,6 @@ def callback(request):
     return HttpResponseRedirect(reverse("index"))
 
 def get_home_timeline(request):
-    #import pdb;pdb.set_trace()
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'), include_entities=True)
@@ -79,19 +78,9 @@ def get_home_timeline(request):
                     if re.search(ii['url'], text):
                         text = re.sub(ii['url'], ii['expanded_url'], text)
 
-
         if i == home_timeline[0]:
             request.session['since_id'] = i.id_str
 
-
-        hashtag =  re.search(r'(#[\w一-龠ぁ-んァ-ヴー]+)', text)
-        if hashtag is None:
-            pass
-        else:
-            pass
-            #print hashtag.group(1)
-            #text = '<a href="https://twitter.com/#!/search/"'+hashtag.group(1)+ '>'+hashtag.group(1) +"</a>"
-            #text = "<a href=%s>%s</a>" % ("https://twitter.com/#!/search/", hashtag.group(1))
         t = Tweet(user_id = i.user.id_str,
                   status_id = i.id_str,
                   name = i.user.name,
