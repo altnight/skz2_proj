@@ -67,6 +67,12 @@ def get_home_timeline(request):
     home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'), include_entities=True)
     for tweet in home_timeline:
 
+        try:
+            if tweet.retweeted_status:
+                tweet = tweet.retweeted_status
+        except:
+            pass
+
         if tweet == home_timeline[0]:
             request.session['since_id'] = tweet.id_str
 
