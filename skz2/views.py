@@ -68,6 +68,7 @@ def get_home_timeline(request):
     home_timeline = api.home_timeline(count=100)
     for i in home_timeline:
         t = Tweet(user_id = i.user.id_str,
+                  status_id = i.id_str,
                   name = i.user.name,
                   screen_name = i.user.screen_name,
                   text = i.text,
@@ -77,5 +78,5 @@ def get_home_timeline(request):
                   protected = i.user.protected,
                  )
         t.save()
-    tm = Tweet.objects.all().order_by('created_at')[:100]
+    tm = Tweet.objects.all().order_by('-created_at')[:100]
     return direct_to_template(request, "skz2.html", {"tweets":tm})

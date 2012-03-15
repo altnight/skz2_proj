@@ -17,6 +17,7 @@ class User(models.Model):
 
 class Tweet(models.Model):
     user_id = models.CharField(u"ユーザー固有のID", max_length=10)
+    status_id = models.CharField(u"status", max_length=30)
     name = models.CharField(u"name", max_length=30)
     screen_name = models.CharField(u"screen_name", max_length=20)
     text = models.CharField(u"本文", max_length=150)
