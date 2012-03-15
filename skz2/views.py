@@ -8,12 +8,10 @@ from skz2.models import User, Tweet
 
 import tweepy
 from see import see
-import datetime
-import re
-from requests import get
 
 from config import TwitterOAuth
-from skz2.tools import setOAuth
+from skz2.tools import setOAuth, expandURL
+
 CONSUMER_KEY = TwitterOAuth.consumer_key
 CONSUMER_SECRET = TwitterOAuth.consumer_secret
 CALLBACK_URL = TwitterOAuth.callback_url
@@ -67,33 +65,14 @@ def get_home_timeline(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'), include_entities=True)
-    for i in home_timeline:
-        text = i.text
+    for tweet in home_timeline:
 
-        for url in i.entities['urls']:
-            if url is None:
-                continue
-            else:
-                for ii in i.entities['urls']:
-                    if re.search(ii['url'], text):
-                        text = re.sub(ii['url'], ii['expanded_url'], text)
+        if tweet == home_timeline[0]:
+            request.session['since_id'] = tweet.id_str
 
-        if i == home_timeline[0]:
-            request.session['since_id'] = i.id_str
+        text = expandURL(tweet)
+        Tweet.saveTweet(tweet, text)
 
-        t = Tweet(user_id = i.user.id_str,
-                  status_id = i.id_str,
-                  name = i.user.name,
-                  screen_name = i.user.screen_name,
-                  user_image_url = i.user.profile_image_url,
-                  text = text,
-                  in_reply_to_status_id = i.in_reply_to_status_id,
-                  favorited = i.favorited,
-                  created_at = i.created_at + datetime.timedelta(0, 3600*9),
-                  protected = i.user.protected,
-                  source = i.source,
-                  source_url = i.source_url,
-                 )
-        t.save()
     tm = Tweet.objects.all().order_by('-created_at')[:100]
+
     return direct_to_template(request, "skz2.html", {"tweets":tm})

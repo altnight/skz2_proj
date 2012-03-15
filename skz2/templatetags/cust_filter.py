@@ -23,7 +23,6 @@ def hashtag(value, autoescape=None):
     if hashtag is None:
         pass
     else:
-        print hashtag
         value= re.sub(r'#([\w一-龠ぁ-んァ-ヴー]+)'.decode('utf-8'), '<a href=https://twitter.com/#!/search/%23' + hashtag.group(1) +'>#'+ hashtag.group(1)+'</a>', value)
     return mark_safe(value)
 hashtag.needs_autoescape = True

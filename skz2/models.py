@@ -1,5 +1,6 @@
 from django.db import models
 #-*- coding: utf-8 -*-
+import datetime
 
 class User(models.Model):
     name = models.CharField(u"ユーザー固有のID", max_length=10)
@@ -29,9 +30,34 @@ class Tweet(models.Model):
     favorited = models.BooleanField(u"fav")
     created_at = models.CharField(u'作成日時', max_length=40)
     protected = models.BooleanField(u"protect")
+    ctime = models.DateTimeField(u'登録日時',auto_now_add=True, editable=False)
 
     def __unicode__(self):
         return "%s:%s" % (self.screen_name, self.text)
 
     class Meta:
         db_table = 'Tweet'
+
+    @classmethod
+    def saveTweet(cls, tweet, text):
+
+        #Webだったら
+        if not tweet.source_url:
+            source_url = "http://twitter.com/"
+        else:
+            source_url = tweet.source_url
+
+        t = cls(user_id = tweet.user.id_str,
+                status_id = tweet.id_str,
+                name = tweet.user.name,
+                screen_name = tweet.user.screen_name,
+                user_image_url = tweet.user.profile_image_url,
+                text = text,
+                in_reply_to_status_id = tweet.in_reply_to_status_id,
+                favorited = tweet.favorited,
+                created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
+                protected = tweet.user.protected,
+                source = tweet.source,
+                source_url = source_url,
+                 )
+        t.save()
