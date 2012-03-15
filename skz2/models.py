@@ -20,6 +20,7 @@ class Tweet(models.Model):
     status_id = models.CharField(u"status", max_length=30)
     name = models.CharField(u"name", max_length=30)
     screen_name = models.CharField(u"screen_name", max_length=20)
+    user_image_url = models.CharField(u"user_image", max_length=200)
     text = models.CharField(u"本文", max_length=140)
     source = models.CharField(u"source", max_length=30)
     source_url = models.CharField(u"source_url", max_length=50, blank=True, null=True)

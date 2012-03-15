@@ -103,6 +103,7 @@ def get_home_timeline(request):
                   status_id = i.id_str,
                   name = i.user.name,
                   screen_name = i.user.screen_name,
+                  user_image_url = i.user.profile_image_url,
                   text = text,
                   in_reply_to_status_id = i.in_reply_to_status_id,
                   favorited = i.favorited,

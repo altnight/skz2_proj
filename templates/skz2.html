@@ -7,9 +7,11 @@
   {% for obj in tweets %}
   	<li>
      {% if obj.screen_name == obj.name %}
+       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" />
        <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}</a>:{{obj.text|urlize}}
      {% endif %}
      {% if obj.screen_name != obj.name %}
+       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" />
        <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}({{ obj.name }})</a>:{{ obj.text|urlize }}
      {% endif %}
      <a href="http://twitter.com/#!/{{ obj.screen_name }}/status/{{ obj.status_id }}">{{ obj.created_at }}</a>
