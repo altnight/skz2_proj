@@ -10,12 +10,16 @@
      {% if obj.screen_name == obj.name %}
        <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" />
        <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}</a>
-       :{{ obj.text|urlize|user_mention|hashtag }}
+       {% autoescape off %}
+       :{{ obj.text|urlize|user_mention|hashtag|safe }}
+       {% endautoescape %}
      {% endif %}
      {% if obj.screen_name != obj.name %}
        <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" />
        <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}({{ obj.name }})</a>
-       :{{ obj.text|urlize|user_mention|hashtag }}
+       {% autoescape off %}
+       :{{ obj.text|urlize|user_mention|hashtag|safe }}
+       {% endautoescape %}
      {% endif %}
      <a href="http://twitter.com/#!/{{ obj.screen_name }}/status/{{ obj.status_id }}">{{ obj.created_at }}</a>
      from:<a href="{{ obj.source_url }}">{{ obj.source }}</a>
