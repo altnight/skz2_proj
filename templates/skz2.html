@@ -25,7 +25,7 @@
      from:<a href="{{ obj.source_url }}">{{ obj.source }}</a>
      {% if obj.old_tweet_screen_name %}
        <img src="{{ obj.old_tweet_user_image_url }}" alt="{{ obj.old_tweet_screen_name }}" />
-       by:<a href="http://twitter.com/#!/{{ obj.old_tweet_screen_name }}">{{ obj.old_tweet_screen_name }}</a> count::{{ obj.retweeted_count }}
+       by:<a href="http://twitter.com/#!/{{ obj.old_tweet_screen_name }}">{{ obj.old_tweet_screen_name }}</a> count::{{ obj.retweeted_count|add:"1" }}
      {% endif %}
     </li>
   {% endfor %}
