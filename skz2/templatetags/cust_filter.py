@@ -10,9 +10,7 @@ register = template.Library()
 @register.filter
 def user_mention(value, autoescape=None):
     user = re.search(r'@([\w]+)', value)
-    if user is None:
-        pass
-    else:
+    if user:
         value= re.sub(r'@[\w]+', '<a href=https://twitter.com/#!/' + user.group(1) +'>@'+ user.group(1)+'</a>', value)
     return mark_safe(value)
 user_mention.needs_autoescape = True
@@ -20,9 +18,7 @@ user_mention.needs_autoescape = True
 @register.filter
 def hashtag(value, autoescape=None):
     hashtag = re.search(ur'#([\w一-龠ぁ-んァ-ヴー]+)', value)
-    if hashtag is None:
-        pass
-    else:
+    if hashtag:
         value= re.sub(ur'#([\w一-龠ぁ-んァ-ヴー]+)', '<a href=https://twitter.com/#!/search/%23' + hashtag.group(1) +'>#'+ hashtag.group(1)+'</a>', value)
     return mark_safe(value)
 hashtag.needs_autoescape = True
