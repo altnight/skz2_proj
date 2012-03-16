@@ -19,10 +19,10 @@ user_mention.needs_autoescape = True
 
 @register.filter
 def hashtag(value, autoescape=None):
-    hashtag = re.search(r'#([\w一-龠ぁ-んァ-ヴー]+)'.decode('utf-8'), value)
+    hashtag = re.search(ur'#([\w一-龠ぁ-んァ-ヴー]+)', value)
     if hashtag is None:
         pass
     else:
-        value= re.sub(r'#([\w一-龠ぁ-んァ-ヴー]+)'.decode('utf-8'), '<a href=https://twitter.com/#!/search/%23' + hashtag.group(1) +'>#'+ hashtag.group(1)+'</a>', value)
+        value= re.sub(ur'#([\w一-龠ぁ-んァ-ヴー]+)', '<a href=https://twitter.com/#!/search/%23' + hashtag.group(1) +'>#'+ hashtag.group(1)+'</a>', value)
     return mark_safe(value)
 hashtag.needs_autoescape = True
