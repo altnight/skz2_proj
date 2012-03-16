@@ -30,6 +30,9 @@ class Tweet(models.Model):
     favorited = models.BooleanField(u"fav")
     created_at = models.CharField(u'作成日時', max_length=40)
     protected = models.BooleanField(u"protect")
+    old_tweet_screen_name = models.CharField(u'retweetした人のscreen_name',  max_length=20, blank=True, null=True)
+    old_tweet_user_image_url = models.CharField(u'retweetした人のuser_image', max_length=200, blank=True, null=True)
+    retweeted_count = models.CharField(u'retweet_count', max_length=10, blank=True, null=True)
     ctime = models.DateTimeField(u'登録日時',auto_now_add=True, editable=False)
 
     def __unicode__(self):
@@ -39,7 +42,8 @@ class Tweet(models.Model):
         db_table = 'Tweet'
 
     @classmethod
-    def saveTweet(cls, tweet, text):
+    def saveTweet(cls, tweet, text, old_tweet=None):
+        #import pdb;pdb.set_trace()
 
         #Webだったら
         if not tweet.source_url:
@@ -47,7 +51,9 @@ class Tweet(models.Model):
         else:
             source_url = tweet.source_url
 
-        t = cls(user_id = tweet.user.id_str,
+        #公式RTされたなら
+        if old_tweet:
+            t = cls(user_id = tweet.user.id_str,
                 status_id = tweet.id_str,
                 name = tweet.user.name,
                 screen_name = tweet.user.screen_name,
@@ -59,5 +65,22 @@ class Tweet(models.Model):
                 protected = tweet.user.protected,
                 source = tweet.source,
                 source_url = source_url,
-                 )
+                old_tweet_screen_name = old_tweet.user.screen_name,
+                old_tweet_user_image_url = old_tweet.user.profile_image_url,
+                retweeted_count = old_tweet.retweet_count,
+               )
+        else:
+            t = cls(user_id = tweet.user.id_str,
+                status_id = tweet.id_str,
+                name = tweet.user.name,
+                screen_name = tweet.user.screen_name,
+                user_image_url = tweet.user.profile_image_url,
+                text = text,
+                in_reply_to_status_id = tweet.in_reply_to_status_id,
+                favorited = tweet.favorited,
+                created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
+                protected = tweet.user.protected,
+                source = tweet.source,
+                source_url = source_url,
+               )
         t.save()

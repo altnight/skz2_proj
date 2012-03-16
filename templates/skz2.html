@@ -19,6 +19,10 @@
      {% endif %}
      <a href="http://twitter.com/#!/{{ obj.screen_name }}/status/{{ obj.status_id }}">{{ obj.created_at }}</a>
      from:<a href="{{ obj.source_url }}">{{ obj.source }}</a>
+     {% if obj.old_tweet_screen_name %}
+       <img src="{{ obj.old_tweet_user_image_url }}" alt="{{ obj.old_tweet_screen_name }}" />
+       by:<a href="http://twitter.com/#!/{{ obj.old_tweet_screen_name }}">{{ obj.old_tweet_screen_name }}</a> count::{{ obj.retweeted_count }}
+     {% endif %}
     </li>
   {% endfor %}
   </ul>

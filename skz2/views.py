@@ -22,6 +22,11 @@ def index(request):
     else:
         return direct_to_template(request, 'index.html',{})
 
+def delete_session(request):
+    del request.session['session_user']
+    del request.session['since_id']
+    return HttpResponseRedirect(reverse('index'))
+
 def get_oauth(request):
     '''OAuthを取り付ける最初のステップ'''
     #CONSUMER_KEY,CONSUMER_SECRETを設定
@@ -62,13 +67,16 @@ def callback(request):
     return HttpResponseRedirect(reverse("index"))
 
 def get_home_timeline(request):
+
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count = 100,since_id = request.session.get('since_id'), include_entities=True)
+    home_timeline = api.home_timeline(count = 200,since_id = request.session.get('since_id'), include_entities=True)
     for tweet in home_timeline:
 
+        old_tweet = None
         try:
             if tweet.retweeted_status:
+                old_tweet = tweet
                 tweet = tweet.retweeted_status
         except:
             pass
@@ -77,8 +85,9 @@ def get_home_timeline(request):
             request.session['since_id'] = tweet.id_str
 
         text = expandURL(tweet)
-        Tweet.saveTweet(tweet, text)
+        Tweet.saveTweet(tweet, text, old_tweet)
 
-    tm = Tweet.objects.all().order_by('-created_at')[:100]
+
+    tm = Tweet.objects.all().order_by('ctime')[:200]
 
     return direct_to_template(request, "skz2.html", {"tweets":tm})
