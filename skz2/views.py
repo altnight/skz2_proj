@@ -93,8 +93,8 @@ def get_home_timeline(request):
             pass
 
         text = expandURL(tweet)
-        Tweet.saveTweet(tweet, text, old_tweet)
+        Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    tm = Tweet.objects.all().order_by('-created_at')[:200]
+    tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-created_at')[:200]
 
     return direct_to_template(request, "skz2.html", {"tweets":tm})

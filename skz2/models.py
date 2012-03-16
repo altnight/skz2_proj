@@ -17,7 +17,7 @@ class User(models.Model):
         db_table = 'User'
 
 class Tweet(models.Model):
-    user_id = models.CharField(u"ユーザー固有のID", max_length=10)
+    userid = models.CharField(u"ユーザー固有のID", max_length=10)
     status_id = models.CharField(u"status", max_length=30)
     name = models.CharField(u"name", max_length=30)
     screen_name = models.CharField(u"screen_name", max_length=20)
@@ -34,6 +34,7 @@ class Tweet(models.Model):
     old_tweet_user_image_url = models.CharField(u'retweetした人のuser_image', max_length=200, blank=True, null=True)
     retweeted_count = models.CharField(u'retweet_count', max_length=10, blank=True, null=True)
     ctime = models.DateTimeField(u'登録日時',auto_now_add=True, editable=False)
+    user = models.ForeignKey(User, verbose_name=u'ユーザー')
 
     def __unicode__(self):
         return "%s:%s" % (self.screen_name, self.text)
@@ -42,8 +43,7 @@ class Tweet(models.Model):
         db_table = 'Tweet'
 
     @classmethod
-    def saveTweet(cls, tweet, text, old_tweet=None):
-        #import pdb;pdb.set_trace()
+    def saveTweet(cls, request, tweet, text, old_tweet=None):
 
         #Webだったら
         if not tweet.source_url:
@@ -53,7 +53,7 @@ class Tweet(models.Model):
 
         #公式RTされたなら
         if old_tweet:
-            t = cls(user_id = tweet.user.id_str,
+            t = cls(userid = tweet.user.id_str,
                 status_id = tweet.id_str,
                 name = tweet.user.name,
                 screen_name = tweet.user.screen_name,
@@ -68,9 +68,10 @@ class Tweet(models.Model):
                 old_tweet_screen_name = old_tweet.user.screen_name,
                 old_tweet_user_image_url = old_tweet.user.profile_image_url,
                 retweeted_count = old_tweet.retweet_count,
+                user = request.session.get('session_user'),
                )
         else:
-            t = cls(user_id = tweet.user.id_str,
+            t = cls(userid = tweet.user.id_str,
                 status_id = tweet.id_str,
                 name = tweet.user.name,
                 screen_name = tweet.user.screen_name,
@@ -82,5 +83,6 @@ class Tweet(models.Model):
                 protected = tweet.user.protected,
                 source = tweet.source,
                 source_url = source_url,
+                user = request.session.get('session_user'),
                )
         t.save()
