@@ -23,8 +23,10 @@ def index(request):
         return direct_to_template(request, 'index.html',{})
 
 def delete_session(request):
-    del request.session['session_user']
-    del request.session['since_id']
+    if request.session.get('session_user'):
+        del request.session['session_user']
+    if request.session.get('since_id'):
+        del request.session['since_id']
     return HttpResponseRedirect(reverse('index'))
 
 def get_oauth(request):
