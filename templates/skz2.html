@@ -8,14 +8,14 @@
   {% for obj in tweets %}
   	<li>
      {% if obj.screen_name == obj.name %}
-       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" />
+       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" class='user_icon' />
        <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}</a>
        {% autoescape off %}
        :{{ obj.text|urlize|user_mention|hashtag }}
        {% endautoescape %}
      {% endif %}
      {% if obj.screen_name != obj.name %}
-       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" />
+       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" class='user_icon' />
        <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}({{ obj.name }})</a>
        {% autoescape off %}
        :{{ obj.text|urlize|user_mention|hashtag }}

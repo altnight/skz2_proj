@@ -72,29 +72,27 @@ def get_home_timeline(request):
 
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count = 200,since_id = request.session.get('since_id'), include_entities=True)
+    home_timeline = api.home_timeline(count = 200, since_id=request.session.get('since_id'), include_entities=True)
+    #import pdb;pdb.set_trace()
     for tweet in home_timeline:
 
         #since_idが公式RTではないことを確認
-        try:
-            if tweet.retweeted_status:
-                pass
-        except:
+        #import pdb;pdb.set_trace()
+        if hasattr(tweet, 'retweeted_status'):
+            pass
+        else:
             if tweet == home_timeline[0]:
                 request.session['since_id'] = tweet.id_str
 
         #公式RT対応
         old_tweet = None
-        try:
-            if tweet.retweeted_status:
-                old_tweet = tweet
-                tweet = tweet.retweeted_status
-        except:
-            pass
+        if hasattr(tweet, 'retweeted_status'):
+            old_tweet = tweet
+            tweet = tweet.retweeted_status
 
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-created_at')[:200]
+    tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('ctime')[:200]
 
     return direct_to_template(request, "skz2.html", {"tweets":tm})
