@@ -73,16 +73,11 @@ def get_home_timeline(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     home_timeline = api.home_timeline(count = 200, since_id=request.session.get('since_id'), include_entities=True)
-    #import pdb;pdb.set_trace()
+    home_timeline.reverse()
     for tweet in home_timeline:
 
-        #since_idが公式RTではないことを確認
-        #import pdb;pdb.set_trace()
-        if hasattr(tweet, 'retweeted_status'):
-            pass
-        else:
-            if tweet == home_timeline[0]:
-                request.session['since_id'] = tweet.id_str
+        if tweet == home_timeline[0]:
+            request.session['since_id'] = tweet.id_str
 
         #公式RT対応
         old_tweet = None
@@ -93,6 +88,6 @@ def get_home_timeline(request):
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('ctime')[:200]
+    tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
 
     return direct_to_template(request, "skz2.html", {"tweets":tm})
