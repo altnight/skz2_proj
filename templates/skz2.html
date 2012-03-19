@@ -4,6 +4,7 @@
 {% block content %}
   <h2>スカンディナヴィア半島</h2>
   <a href="{% url get_home_timeline %}">home_timeline</a>
+  <a href="{% url get_lists%}">lists</a>
   <ul>
   {% for obj in tweets %}
   	<li>
@@ -28,6 +29,9 @@
        by:<a href="http://twitter.com/#!/{{ obj.old_tweet_screen_name }}">{{ obj.old_tweet_screen_name }}</a> count::{{ obj.retweeted_count|add:"1" }}
      {% endif %}
     </li>
+  {% endfor %}
+  {% for list in lists %}
+  <span>{{ list.full_name }}</span>
   {% endfor %}
   </ul>
 {% endblock %}

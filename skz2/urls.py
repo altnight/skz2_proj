@@ -10,5 +10,6 @@ urlpatterns = patterns('skz2.views',
     url(r'^get_oauth$', 'get_oauth', name='get_oauth'),
     url(r'^callback$', 'callback', name='callback'),
     url(r'^get_home_timeline$', 'get_home_timeline', name='get_home_timeline'),
+    url(r'^get_lists$', 'get_lists', name='get_lists'),
 )
 

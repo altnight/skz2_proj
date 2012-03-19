@@ -91,3 +91,10 @@ def get_home_timeline(request):
     tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
 
     return direct_to_template(request, "skz2.html", {"tweets":tm})
+
+def get_lists(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    lists = api.lists()
+    list_ary = [list for list in lists]
+    return direct_to_template(request, "skz2.html", {"lists":list_ary})
