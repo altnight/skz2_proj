@@ -8,7 +8,7 @@ class User(models.Model):
     atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
     access_token = models.CharField(u'access_token',max_length=255)
     access_token_secret = models.CharField(u'access_token_secret',max_length=255)
-    is_active = models.BooleanField(default=True)
+    #is_active = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
@@ -86,3 +86,17 @@ class Tweet(models.Model):
                 user = request.session.get('session_user'),
                )
         t.save()
+
+class Lists(models.Model):
+    name = models.CharField(u"リストの名前", max_length=30)
+    full_name = models.CharField(u"リストのフルネーム", max_length=30)
+    members = models.CharField(u"リストのフォロー", max_length=1000)
+    ctime = models.DateTimeField(u'登録日時',auto_now_add=True, editable=False)
+    atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
+    user = models.ForeignKey(User, verbose_name=u'ユーザー')
+
+    def __unicode__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'Lists'

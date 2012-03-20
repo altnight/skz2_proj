@@ -6,12 +6,11 @@ from django.views.generic.simple import direct_to_template
 #from django.shortcuts import get_object_or_404
 from django.utils import simplejson as json
 
-from skz2.models import User, Tweet
-from skz2.mappers import TweetMapper
+from skz2.models import User, Tweet, Lists
+from skz2.mappers import TweetMapper, ListsMapper
 
 import tweepy
 from see import see
-from bpmappers import Mapper, RawField
 
 from config import TwitterOAuth
 from skz2.tools import setOAuth, expandURL
@@ -92,16 +91,28 @@ def get_home_timeline(request):
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
+    home_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
 
-    home_timeline_dict = [TweetMapper(obj).as_dict() for obj in tm]
+    home_timeline_dict = [TweetMapper(obj).as_dict() for obj in home_timeline_query]
     home_timeline_json = json.dumps(home_timeline_dict)
-    #return direct_to_template(request, "skz2.html", {"tweets":tm})
     return HttpResponse(home_timeline_json, mimetype='application/json')
 
 def get_lists(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     lists = api.lists()
-    list_ary = [list for list in lists]
-    return direct_to_template(request, "skz2.html", {"lists":list_ary})
+
+    #一度既存のリスト一覧を削除
+    Lists.objects.filter(user=request.session.get('session_user')).delete()
+    for li in lists:
+        list_members = [member.screen_name for member in li.members()]
+        l = Lists(name = li.name,
+                  full_name = li.full_name,
+                  members = list_members,
+                  user = request.session.get('session_user'),
+                )
+        l.save()
+    lists_query = Lists.objects.filter(user=request.session.get('session_user'))
+    lists_dict = [ListsMapper(obj).as_dict() for obj in lists_query]
+    lists_json = json.dumps(lists_dict)
+    return HttpResponse(lists_json, mimetype='application/json')
