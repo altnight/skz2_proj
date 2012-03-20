@@ -1,13 +1,17 @@
 #-*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
 #from django.shortcuts import get_object_or_404
+from django.utils import simplejson as json
 
 from skz2.models import User, Tweet
+from skz2.mappers import TweetMapper
 
 import tweepy
 from see import see
+from bpmappers import Mapper, RawField
 
 from config import TwitterOAuth
 from skz2.tools import setOAuth, expandURL
@@ -90,7 +94,10 @@ def get_home_timeline(request):
 
     tm = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
 
-    return direct_to_template(request, "skz2.html", {"tweets":tm})
+    home_timeline_dict = [TweetMapper(obj).as_dict() for obj in tm]
+    home_timeline_json = json.dumps(home_timeline_dict)
+    #return direct_to_template(request, "skz2.html", {"tweets":tm})
+    return HttpResponse(home_timeline_json, mimetype='application/json')
 
 def get_lists(request):
     auth = setOAuth(request)
