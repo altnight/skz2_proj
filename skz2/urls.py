@@ -16,5 +16,6 @@ urlpatterns = patterns('skz2.views',
     url(r'^get_sent_direct_messages$', 'get_sent_direct_messages', name='get_sent_direct_messages'),
     url(r'^get_lists$', 'get_lists', name='get_lists'),
     url(r'^get_list_timeline/(?P<list_owner>\w+)/(?P<list_name>\w+)/$', 'get_list_timeline', name='get_list_timeline'),
+    url(r'^get_api_limit$', 'get_api_limit', name='get_api_limit'),
 )
 

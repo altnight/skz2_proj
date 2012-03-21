@@ -7,7 +7,7 @@ from django.views.generic.simple import direct_to_template
 from django.utils import simplejson as json
 
 from skz2.models import User, Tweet, Lists
-from skz2.mappers import TweetMapper, ListsMapper
+from skz2.mappers import TweetMapper, ListsMapper, RateLimitMapper
 
 import tweepy
 from see import see
@@ -212,3 +212,16 @@ def get_list_timeline(request, list_owner, list_name):
     list_timeline_json = json.dumps(list_timeline_dict)
     return HttpResponse(list_timeline_json, mimetype='application/json')
     #return direct_to_template(request, "skz2.html", {"tweets":list_timeline_query})
+
+def get_api_limit(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    api_limit = api.rate_limit_status()
+
+    remaining = api_limit['remaining_hits']
+    hourly_limit = api_limit['hourly_limit']
+    reset_time = api_limit['reset_time']
+
+    api_limit_dict = {"remaining":remaining, "hourly_limit":hourly_limit, "reset_time":reset_time}
+    api_limit_json= json.dumps(api_limit_dict)
+    return HttpResponse(api_limit_json, mimetype='application/json')

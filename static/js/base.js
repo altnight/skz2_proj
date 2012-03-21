@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-  var createDateTimeFormat, getCurrentDate, max_length;
+  var createAPILimitFormat, createDateTimeFormat, getAPILimit, getCurrentDate, getHomeTimeline, max_length;
   $('#status').on('focus', function() {
     $(this).css('rows', 8);
     $(this).css('cols', 80);
@@ -54,5 +54,34 @@ $(document).ready(function() {
     seconds = ("0" + d.getSeconds()).slice(-2);
     return "" + year + "/" + month + "/" + date + " " + hour + ":" + minutes + ":" + seconds;
   };
-  return $('#current_date').append(createDateTimeFormat(getCurrentDate()));
+  $('#current_date').append(createDateTimeFormat(getCurrentDate()));
+  createAPILimitFormat = function(json) {
+    var hourly_limit, remaining, reset_time;
+    remaining = json.remaining;
+    hourly_limit = json.hourly_limit;
+    reset_time = createDateTimeFormat(new Date(json.reset_time));
+    return "" + remaining + "/" + hourly_limit + " " + reset_time;
+  };
+  getAPILimit = function() {
+    return $.ajax({
+      type: "GET",
+      url: "http://192.168.56.101:8000/get_api_limit",
+      dataTpye: "json",
+      success: function(json) {
+        return $('#api_limit').append(createAPILimitFormat(json));
+      }
+    });
+  };
+  getAPILimit();
+  getHomeTimeline = function() {
+    return $.ajax({
+      type: "GET",
+      url: "http://192.168.56.101:8000/get_home_timeline",
+      dataTpye: "json",
+      success: function(json) {
+        return $('#column1').append(json);
+      }
+    });
+  };
+  return getHomeTimeline();
 });

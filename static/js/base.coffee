@@ -42,7 +42,7 @@ $(document).ready ->
     )
     #=========================
 
-    #現在時刻を設定する
+    #時刻を設定する
     #=========================
     getCurrentDate = ->
         new Date
@@ -57,3 +57,33 @@ $(document).ready ->
 
     $('#current_date').append(createDateTimeFormat(getCurrentDate()))
     #=========================
+
+
+    #APILimit
+    #=========================
+
+    createAPILimitFormat = (json)->
+        remaining = json.remaining
+        hourly_limit= json.hourly_limit
+        reset_time= createDateTimeFormat(new Date(json.reset_time))
+        return "#{remaining}/#{hourly_limit} #{reset_time}"
+
+    getAPILimit = ->
+        $.ajax
+            type: "GET"
+            url: "http://192.168.56.101:8000/get_api_limit"
+            dataTpye: "json"
+            success: (json) ->
+                $('#api_limit').append(createAPILimitFormat(json))
+
+    getAPILimit()
+
+    #=========================
+    getHomeTimeline = ->
+        $.ajax
+            type: "GET"
+            url: "http://192.168.56.101:8000/get_home_timeline"
+            dataTpye: "json"
+            success: (json) ->
+                $('#column1').append(json)
+    getHomeTimeline()
