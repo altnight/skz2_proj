@@ -89,7 +89,7 @@ $(document).ready(function() {
   };
   createTweetdiv = function(arg) {
     var tweetdiv;
-    tweetdiv = $("<div></div>");
+    tweetdiv = $("<div>");
     tweetdiv.attr('class', 'tweet');
     return tweetdiv.attr('id', arg.status_id);
   };
@@ -110,14 +110,13 @@ $(document).ready(function() {
     }
     user_name.attr('href', twitter_url.url + arg.screen_name);
     user_name.attr('class', 'user_name');
-    return user_name.textContent = display_name;
+    return user_name.text(display_name);
   };
   createText = function(arg) {
-    var text, textdiv;
-    textdiv = $('<div></div>');
+    var textdiv;
+    textdiv = $('<div>');
     textdiv.attr('class', 'text');
-    text = arg.text;
-    return textdiv.innerHTML = text;
+    return textdiv.text(arg.text);
   };
   createTimeLink = function(arg) {
     var time, timelink;
@@ -125,14 +124,13 @@ $(document).ready(function() {
     timelink.attr('href', "" + twitter_url.url + arg.screen_name + "/status/" + arg.status_id);
     timelink.attr('class', 'time');
     time = createDateTimeFormat(new Date(arg.created_at));
-    return timelink.textContent = time;
+    return timelink.text(time);
   };
   buildStream = function(json) {
     var arg, tweetdiv, _i, _len, _results;
     _results = [];
     for (_i = 0, _len = json.length; _i < _len; _i++) {
       arg = json[_i];
-      debugger;
       tweetdiv = createTweetdiv(arg);
       $("#column1").append(tweetdiv);
       tweetdiv.append(createImage(arg));

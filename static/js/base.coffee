@@ -77,7 +77,9 @@ $(document).ready ->
                 $('#api_limit').append(createAPILimitFormat(json))
 
     getAPILimit()
+    #=========================
 
+    #Streamを組み立てる
     #=========================
     twitter_url =
         url: "https://twitter.com/"
@@ -92,7 +94,7 @@ $(document).ready ->
                 buildStream(json)
 
     createTweetdiv = (arg) ->
-        tweetdiv = $("<div></div>")
+        tweetdiv = $("<div>")
         tweetdiv.attr('class', 'tweet')
         tweetdiv.attr('id', arg.status_id)
 
@@ -110,24 +112,23 @@ $(document).ready ->
             display_name = "#{arg.screen_name}(#{arg.name})"
         user_name.attr('href', twitter_url.url + arg.screen_name)
         user_name.attr('class', 'user_name')
-        user_name.textContent = display_name
+        user_name.text(display_name)
 
     createText = (arg) ->
-        textdiv = $('<div></div>')
+        textdiv = $('<div>')
         textdiv.attr('class', 'text')
-        text = arg.text
-        textdiv.innerHTML = text
+        textdiv.text(arg.text)
 
     createTimeLink = (arg) ->
         timelink = $('<a>')
         timelink.attr('href', "#{twitter_url.url}#{arg.screen_name}/status/#{arg.status_id}")
         timelink.attr('class', 'time')
         time = createDateTimeFormat(new Date(arg.created_at))
-        timelink.textContent= time
+        timelink.text(time)
 
     buildStream = (json) ->
         for arg in json
-            debugger
+            #debugger
             tweetdiv = createTweetdiv(arg)
             $("#column1").append(tweetdiv)
             tweetdiv.append(createImage(arg))
@@ -135,4 +136,5 @@ $(document).ready ->
             tweetdiv.append(createText(arg))
             tweetdiv.append(createTimeLink(arg))
 
+    #試験的に実行している
     getHomeTimeline()
