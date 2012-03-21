@@ -28,8 +28,14 @@ def index(request):
 def delete_session(request):
     if request.session.get('session_user'):
         del request.session['session_user']
-    if request.session.get('since_id'):
-        del request.session['since_id']
+    if request.session.get('home_timeline_since_id'):
+        del request.session['home_timeline_since_id']
+    if request.session.get('mentions_since_id'):
+        del request.session['mentions_since_id']
+    #if request.session.get('list_timeline_since_id'):
+        #del request.session['list_timeline_since_id']
+    #if request.session.get('direct_messages_since_id'):
+        #del request.session['direct_messages_since_id']
     return HttpResponseRedirect(reverse('index'))
 
 def get_oauth(request):
@@ -75,12 +81,12 @@ def get_home_timeline(request):
 
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count = 200, since_id=request.session.get('since_id'), include_entities=True)
+    home_timeline = api.home_timeline(count = 200, since_id=request.session.get('home_timeline_since_id'), include_entities=True)
     home_timeline.reverse()
     for tweet in home_timeline:
 
         if tweet == home_timeline[0]:
-            request.session['since_id'] = tweet.id_str
+            request.session['home_timeline_since_id'] = tweet.id_str
 
         #公式RT対応
         old_tweet = None
@@ -101,6 +107,7 @@ def get_lists(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     lists = api.lists()
+    lists.reverse()
 
     #一度既存のリスト一覧を削除
     Lists.objects.filter(user=request.session.get('session_user')).delete()
@@ -116,3 +123,52 @@ def get_lists(request):
     lists_dict = [ListsMapper(obj).as_dict() for obj in lists_query]
     lists_json = json.dumps(lists_dict)
     return HttpResponse(lists_json, mimetype='application/json')
+
+def get_mentions(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    mentions = api.mentions(count = 50, since_id=request.session.get('mentions_since_id'), include_entities=True)
+    mentions.reverse()
+    for tweet in mentions:
+
+        if tweet == mentions[0]:
+            request.session['memtions_since_id'] = tweet.id_str
+
+        text = expandURL(tweet)
+        Tweet.saveTweet(request, tweet, text)
+
+    mentions_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:50]
+
+    mentions_dict = [TweetMapper(obj).as_dict() for obj in mentions_query]
+    mentions_json = json.dumps(mentions_dict)
+    return HttpResponse(mentions_json, mimetype='application/json')
+    #return direct_to_template(request, "skz2.html", {"tweets":mentions_query})
+
+def get_list_timeline(request, list_owner, list_name):
+
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    #import pdb;pdb.set_trace()
+    rts = request.GET.get('rts')
+    list_timeline = api.list_timeline(owner=list_owner, slug=list_name, count = 200, include_entities=True, include_rts=rts)
+    list_timeline.reverse()
+    for tweet in list_timeline:
+
+        #if tweet == list_timeline[0]:
+            #request.session['list_timeline_since_id'] = tweet.id_str
+
+        #公式RT対応
+        old_tweet = None
+        if hasattr(tweet, 'retweeted_status'):
+            old_tweet = tweet
+            tweet = tweet.retweeted_status
+
+        text = expandURL(tweet)
+        Tweet.saveTweet(request, tweet, text, old_tweet)
+
+    list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
+
+    list_timeline_dict = [TweetMapper(obj).as_dict() for obj in list_timeline_query]
+    list_timeline_json = json.dumps(list_timeline_dict)
+    return HttpResponse(list_timeline_json, mimetype='application/json')
+    #return direct_to_template(request, "skz2.html", {"tweets":list_timeline_query})

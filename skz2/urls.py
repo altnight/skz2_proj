@@ -10,6 +10,9 @@ urlpatterns = patterns('skz2.views',
     url(r'^get_oauth$', 'get_oauth', name='get_oauth'),
     url(r'^callback$', 'callback', name='callback'),
     url(r'^get_home_timeline$', 'get_home_timeline', name='get_home_timeline'),
+    url(r'^get_mentions$', 'get_mentions', name='get_mentions'),
+    #url(r'^get_direct_messages$', 'get_direct_messages', name='get_direct_messages'),
     url(r'^get_lists$', 'get_lists', name='get_lists'),
+    url(r'^get_list_timeline/(?P<list_owner>\w+)/(?P<list_name>\w+)/$', 'get_list_timeline', name='get_list_timeline'),
 )
 

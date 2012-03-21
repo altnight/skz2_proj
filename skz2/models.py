@@ -24,7 +24,7 @@ class Tweet(models.Model):
     user_image_url = models.CharField(u"user_image", max_length=200)
     text = models.CharField(u"本文", max_length=140)
     source = models.CharField(u"source", max_length=30)
-    source_url = models.CharField(u"source_url", max_length=50, blank=True, null=True)
+    source_url = models.CharField(u"source_url", max_length=50)
     in_reply_to_status_id = models.CharField(u"in_reply_to", max_length=40, blank=True, null=True)
     #since_id = models.CharField(u"since_id", max_length=30)
     favorited = models.BooleanField(u"fav")

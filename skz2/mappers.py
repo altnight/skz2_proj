@@ -1,5 +1,5 @@
 from bpmappers.djangomodel import *
-from bpmappers import RawField, Mapper, DelegateField, ListDelegateField
+#from bpmappers import RawField, Mapper, DelegateField, ListDelegateField
 from skz2.models import Tweet, Lists
 
 class TweetMapper(ModelMapper):
