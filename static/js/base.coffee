@@ -11,3 +11,15 @@ $(document).ready ->
         @.style.width = "227px"
         @.style.height = "13px"
     )
+    $('#status').on('keyup', (ev)->
+        if ev.keyCode == 13 #Enter
+            alert '発言しました'
+            $.ajax
+                type: "GET"
+                data:
+                    q: $('#status').val()
+                url: "http://192.168.56.101:8000/update_status"
+                dataTpye: "json"
+            テキストエリアを消す
+            $('#status').val('')
+    )

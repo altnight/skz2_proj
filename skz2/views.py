@@ -75,6 +75,14 @@ def callback(request):
     request.session['session_user'] = new_user
     return HttpResponseRedirect(reverse("index"))
 
+def update_status(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    try:
+        api.update_status(request.GET.get('q'))
+    except Exception:
+        print Exception
+
 def get_home_timeline(request):
 
     auth = setOAuth(request)
