@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-  var createAPILimitFormat, createDateTimeFormat, getAPILimit, getCurrentDate, getHomeTimeline, max_length;
+  var buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, max_length, twitter_url;
   $('#status').on('focus', function() {
     $(this).css('rows', 8);
     $(this).css('cols', 80);
@@ -60,7 +60,7 @@ $(document).ready(function() {
     remaining = json.remaining;
     hourly_limit = json.hourly_limit;
     reset_time = createDateTimeFormat(new Date(json.reset_time));
-    return "" + remaining + "/" + hourly_limit + " " + reset_time;
+    return "" + remaining + "/" + hourly_limit + " resetTime::" + reset_time;
   };
   getAPILimit = function() {
     return $.ajax({
@@ -73,15 +73,74 @@ $(document).ready(function() {
     });
   };
   getAPILimit();
+  twitter_url = {
+    url: "https://twitter.com/",
+    api: "https://api.twitter.com/1/"
+  };
   getHomeTimeline = function() {
     return $.ajax({
       type: "GET",
       url: "http://192.168.56.101:8000/get_home_timeline",
       dataTpye: "json",
       success: function(json) {
-        return $('#column1').append(json);
+        return buildStream(json);
       }
     });
+  };
+  createTweetdiv = function(arg) {
+    var tweetdiv;
+    tweetdiv = $("<div></div>");
+    tweetdiv.attr('class', 'tweet');
+    return tweetdiv.attr('id', arg.status_id);
+  };
+  createImage = function(arg) {
+    var img;
+    img = $("<img/>");
+    img.attr('src', arg.user_image_url);
+    img.attr('alt', arg.screen_name);
+    return img.attr('class', 'user_icon');
+  };
+  createUserName = function(arg) {
+    var display_name, user_name;
+    user_name = $("<a>");
+    if (arg.screen_name === arg.name) {
+      display_name = arg.screen_name;
+    } else {
+      display_name = "" + arg.screen_name + "(" + arg.name + ")";
+    }
+    user_name.attr('href', twitter_url.url + arg.screen_name);
+    user_name.attr('class', 'user_name');
+    return user_name.textContent = display_name;
+  };
+  createText = function(arg) {
+    var text, textdiv;
+    textdiv = $('<div></div>');
+    textdiv.attr('class', 'text');
+    text = arg.text;
+    return textdiv.innerHTML = text;
+  };
+  createTimeLink = function(arg) {
+    var time, timelink;
+    timelink = $('<a>');
+    timelink.attr('href', "" + twitter_url.url + arg.screen_name + "/status/" + arg.status_id);
+    timelink.attr('class', 'time');
+    time = createDateTimeFormat(new Date(arg.created_at));
+    return timelink.textContent = time;
+  };
+  buildStream = function(json) {
+    var arg, tweetdiv, _i, _len, _results;
+    _results = [];
+    for (_i = 0, _len = json.length; _i < _len; _i++) {
+      arg = json[_i];
+      debugger;
+      tweetdiv = createTweetdiv(arg);
+      $("#column1").append(tweetdiv);
+      tweetdiv.append(createImage(arg));
+      tweetdiv.append(createUserName(arg));
+      tweetdiv.append(createText(arg));
+      _results.push(tweetdiv.append(createTimeLink(arg)));
+    }
+    return _results;
   };
   return getHomeTimeline();
 });

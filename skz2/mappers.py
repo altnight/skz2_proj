@@ -5,7 +5,7 @@ from skz2.models import Tweet, Lists
 class TweetMapper(ModelMapper):
     class Meta:
         model = Tweet
-        exclude = 'user', 'ctime', 'created_at'
+        exclude = 'user', 'ctime'
 
 class ListsMapper(ModelMapper):
     class Meta:

@@ -7,7 +7,7 @@ from django.views.generic.simple import direct_to_template
 from django.utils import simplejson as json
 
 from skz2.models import User, Tweet, Lists
-from skz2.mappers import TweetMapper, ListsMapper, RateLimitMapper
+from skz2.mappers import TweetMapper, ListsMapper
 
 import tweepy
 from see import see
