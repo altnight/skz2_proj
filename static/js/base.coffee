@@ -1,4 +1,6 @@
 $(document).ready ->
+    #投稿するところをほげほげする
+    #=========================
     $('#status').on('focus', ->
         $(@).css('rows', 8)
         $(@).css('cols', 80)
@@ -31,12 +33,27 @@ $(document).ready ->
             $(@).val('')
     )
 
-
     $('#status').on('keyup', (ev)->
         $('#count').text(max_length - $(@).val().length)
         if max_length < $(@).val().length
             $('#count').css('color', 'red')
         else
             $('#count').css('color', 'black')
-
     )
+    #=========================
+
+    #現在時刻を設定する
+    #=========================
+    getCurrentDate = ->
+        new Date
+    createDateTimeFormat = (d) ->
+        year = d.getFullYear()
+        month = (d.getMonth() + 1)
+        date = d.getDate()
+        hour = d.getHours()
+        minutes = ("0" + d.getMinutes()).slice(-2)
+        seconds = ("0" + d.getSeconds()).slice(-2)
+        return "#{year}/#{month}/#{date} #{hour}:#{minutes}:#{seconds}"
+
+    $('#current_date').append(createDateTimeFormat(getCurrentDate()))
+    #=========================

@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-  var max_length;
+  var createDateTimeFormat, getCurrentDate, max_length;
   $('#status').on('focus', function() {
     $(this).css('rows', 8);
     $(this).css('cols', 80);
@@ -33,7 +33,7 @@ $(document).ready(function() {
       return $(this).val('');
     }
   });
-  return $('#status').on('keyup', function(ev) {
+  $('#status').on('keyup', function(ev) {
     $('#count').text(max_length - $(this).val().length);
     if (max_length < $(this).val().length) {
       return $('#count').css('color', 'red');
@@ -41,4 +41,18 @@ $(document).ready(function() {
       return $('#count').css('color', 'black');
     }
   });
+  getCurrentDate = function() {
+    return new Date;
+  };
+  createDateTimeFormat = function(d) {
+    var date, hour, minutes, month, seconds, year;
+    year = d.getFullYear();
+    month = d.getMonth() + 1;
+    date = d.getDate();
+    hour = d.getHours();
+    minutes = ("0" + d.getMinutes()).slice(-2);
+    seconds = ("0" + d.getSeconds()).slice(-2);
+    return "" + year + "/" + month + "/" + date + " " + hour + ":" + minutes + ":" + seconds;
+  };
+  return $('#current_date').append(createDateTimeFormat(getCurrentDate()));
 });
