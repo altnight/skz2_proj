@@ -87,6 +87,20 @@ class Tweet(models.Model):
                )
         t.save()
 
+    @classmethod
+    def saveDMTweet(cls, request, tweet, text):
+        t = cls(userid = tweet.sender_id,
+                status_id = tweet.id_str,
+                name = tweet.sender.name,
+                screen_name = tweet.sender_screen_name,
+                user_image_url = tweet.sender.profile_image_url,
+                text = text,
+                in_reply_to_status_id = tweet.id_str,
+                created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
+                user = request.session.get('session_user'),
+               )
+        t.save()
+
 class Lists(models.Model):
     name = models.CharField(u"リストの名前", max_length=30)
     full_name = models.CharField(u"リストのフルネーム", max_length=30)

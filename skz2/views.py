@@ -34,8 +34,6 @@ def delete_session(request):
         del request.session['mentions_since_id']
     #if request.session.get('list_timeline_since_id'):
         #del request.session['list_timeline_since_id']
-    #if request.session.get('direct_messages_since_id'):
-        #del request.session['direct_messages_since_id']
     return HttpResponseRedirect(reverse('index'))
 
 def get_oauth(request):
@@ -143,6 +141,40 @@ def get_mentions(request):
     mentions_json = json.dumps(mentions_dict)
     return HttpResponse(mentions_json, mimetype='application/json')
     #return direct_to_template(request, "skz2.html", {"tweets":mentions_query})
+
+def get_direct_messages(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    direct_messages = api.direct_messages(count = 30, include_entities=True)
+    direct_messages.reverse()
+    for tweet in direct_messages:
+
+        text = expandURL(tweet)
+        Tweet.saveDMTweet(request, tweet, text)
+
+    direct_messages_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:30]
+
+    direct_messages_dict = [TweetMapper(obj).as_dict() for obj in direct_messages_query]
+    direct_messages_json = json.dumps(direct_messages_dict)
+    return HttpResponse(direct_messages_json, mimetype='application/json')
+    #return direct_to_template(request, "skz2.html", {"tweets":direct_messages_query})
+
+def get_sent_direct_messages(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    sent_direct_messages = api.sent_direct_messages(count = 30, include_entities=True)
+    sent_direct_messages.reverse()
+    for tweet in sent_direct_messages:
+
+        text = expandURL(tweet)
+        Tweet.saveDMTweet(request, tweet, text)
+
+    sent_direct_messages_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:30]
+
+    sent_direct_messages_dict = [TweetMapper(obj).as_dict() for obj in sent_direct_messages_query]
+    sent_direct_messages_json = json.dumps(sent_direct_messages_dict)
+    return HttpResponse(sent_direct_messages_json, mimetype='application/json')
+    #return direct_to_template(request, "skz2.html", {"tweets":sent_direct_messages_query})
 
 def get_list_timeline(request, list_owner, list_name):
 
