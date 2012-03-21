@@ -113,10 +113,14 @@ $(document).ready(function() {
     return user_name.text(display_name);
   };
   createText = function(arg) {
-    var textdiv;
+    var textdiv, tweet;
     textdiv = $('<div>');
     textdiv.attr('class', 'text');
-    return textdiv.text(arg.text);
+    tweet = arg.text;
+    if (/shindanmaker/.test(tweet)) tweet = 'また診断メーカーか。';
+    if (/#[一-龠ぁ-んァ-ヴー０-９]{10,}/.test(tweet)) tweet = 'また日本語ハッシュタグか';
+    if (/gohantabeyo/.test(tweet)) tweet = 'またごはんか';
+    return textdiv.text(tweet);
   };
   createTimeLink = function(arg) {
     var time, timelink;

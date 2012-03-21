@@ -117,7 +117,20 @@ $(document).ready ->
     createText = (arg) ->
         textdiv = $('<div>')
         textdiv.attr('class', 'text')
-        textdiv.text(arg.text)
+
+        #debugger
+        tweet = arg.text
+        #tweet = tweet.replace(/(https?:\/\/[\w\.\,\-\+\?\/\%#=\&\!]+)/ig , "<a href='$1' class='url'>$1</a>")
+        #tweet = tweet.replace(/@([\a-zA-Z0-9_]+)/g , "<a href=#{twitter_url.url}$1>@$1</a>")
+        #tweet = tweet.replace(/#([\w一-龠ぁ-んァ-ヴー]+)/g , '<a href="http://twitter.com/search/#$1">#$1</a>')
+        if /shindanmaker/.test(tweet)
+             tweet = 'また診断メーカーか。'
+        if /#[一-龠ぁ-んァ-ヴー０-９]{10,}/.test(tweet)
+             tweet = 'また日本語ハッシュタグか'
+        if /gohantabeyo/.test(tweet)
+             tweet = 'またごはんか'
+
+        textdiv.text(tweet)
 
     createTimeLink = (arg) ->
         timelink = $('<a>')
