@@ -1,11 +1,15 @@
 
 $(document).ready(function() {
-  return $.ajax({
-    type: "GET",
-    url: "http://192.168.56.101:8000/get_home_timeline",
-    dataType: "json",
-    success: function(arg) {
-      return console.log(arg);
-    }
+  $('#status').on('focus', function() {
+    this.style.rows = 8;
+    this.style.cols = 80;
+    this.style.width = "400px";
+    return this.style.height = "80px";
+  });
+  return $('#status').on('blur', function() {
+    this.style.rows = 1;
+    this.style.cols = 30;
+    this.style.width = "227px";
+    return this.style.height = "13px";
   });
 });

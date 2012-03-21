@@ -2,36 +2,37 @@
 {% load cust_filter %}
 {% block title %}スカンディナヴィア半島2{% endblock %}
 {% block content %}
-  <h2>スカンディナヴィア半島</h2>
   <a href="{% url get_home_timeline %}">home_timeline</a>
   <a href="{% url get_lists%}">lists</a>
-  <ul>
-  {% for obj in tweets %}
-  	<li>
-     {% if obj.screen_name == obj.name %}
-       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" class='user_icon' />
-       <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}</a>
-       {% autoescape off %}
-       :{{ obj.text|urlize|user_mention|hashtag }}
-       {% endautoescape %}
-     {% endif %}
-     {% if obj.screen_name != obj.name %}
-       <img src="{{ obj.user_image_url }}" alt="{{ obj.screen_name }}" class='user_icon' />
-       <a href="http://twitter.com/#!/{{ obj.screen_name }}">{{ obj.screen_name }}({{ obj.name }})</a>
-       {% autoescape off %}
-       :{{ obj.text|urlize|user_mention|hashtag }}
-       {% endautoescape %}
-     {% endif %}
-     <a href="http://twitter.com/#!/{{ obj.screen_name }}/status/{{ obj.status_id }}">{{ obj.created_at }}</a>
-     from:<a href="{{ obj.source_url }}">{{ obj.source }}</a>
-     {% if obj.old_tweet_screen_name %}
-       <img src="{{ obj.old_tweet_user_image_url }}" alt="{{ obj.old_tweet_screen_name }}" class="retweeted" />
-       by:<a href="http://twitter.com/#!/{{ obj.old_tweet_screen_name }}">{{ obj.old_tweet_screen_name }}</a> count::{{ obj.retweeted_count|add:"1" }}
-     {% endif %}
-    </li>
-  {% endfor %}
-  {% for list in lists %}
-  <span>{{ list.full_name }}</span>
-  {% endfor %}
-  </ul>
+
+<div id="header">
+  更新時刻: <span id="current_date"></span>
+  APILimit<span id="api_limit"> </span>
+  <form action="" method="POST">
+    発言する::<textarea id="status" name="status" rows="1" cols="30"></textarea>
+    {% csrf_token %}
+  </form>
+</div>
+<div id="column_box">
+  <div id="column1" class="column"></div>
+  <div id="column2" class="column"></div>
+  <div id="column3" class="column"></div>
+  <div id="column4" class="column"></div>
+  <div id="column5" class="column"></div>
+  <div id="column6" class="column"></div>
+  <div id="column7" class="column"></div>
+  <div id="column8" class="column"></div>
+  <div id="column9" class="column"></div>
+  <div id="column10" class="column"></div>
+  <div id="column11" class="column"></div>
+  <div id="column12" class="column"></div>
+  <div id="column13" class="column"></div>
+  <div id="column14" class="column"></div>
+  <div id="column15" class="column"></div>
+  <div id="column16" class="column"></div>
+  <div id="column17" class="column"></div>
+  <div id="column18" class="column"></div>
+  <div id="column19" class="column"></div>
+  <div id="column20" class="column"></div>
+</div>
 {% endblock %}
