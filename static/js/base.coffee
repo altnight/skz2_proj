@@ -26,7 +26,8 @@ $(document).ready ->
                 type: "GET"
                 data:
                     q: $(@).val()
-                url: "http://192.168.56.101:8000/update_status"
+                #url: "http://192.168.56.101:8000/update_status"
+                url: "http://127.0.0.1:8000/update_status"
                 dataTpye: "json"
             alert '発言しました'
             #テキストエリアを消す
@@ -71,7 +72,8 @@ $(document).ready ->
     getAPILimit = ->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_api_limit"
+            #url: "http://192.168.56.101:8000/get_api_limit"
+            url: "http://127.0.0.1:8000/get_api_limit"
             dataTpye: "json"
             success: (json) ->
                 $('#api_limit').append(createAPILimitFormat(json))
@@ -88,7 +90,8 @@ $(document).ready ->
     getHomeTimeline = ->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_home_timeline"
+            #url: "http://192.168.56.101:8000/get_home_timeline"
+            url: "http://127.0.0.1:8000/get_home_timeline"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
@@ -120,9 +123,9 @@ $(document).ready ->
 
         #debugger
         tweet = arg.text
-        #tweet = tweet.replace(/(https?:\/\/[\w\.\,\-\+\?\/\%#=\&\!]+)/ig , "<a href='$1' class='url'>$1</a>")
-        #tweet = tweet.replace(/@([\a-zA-Z0-9_]+)/g , "<a href=#{twitter_url.url}$1>@$1</a>")
-        #tweet = tweet.replace(/#([\w一-龠ぁ-んァ-ヴー]+)/g , '<a href="http://twitter.com/search/#$1">#$1</a>')
+        tweet = tweet.replace(/(https?:\/\/[\w\.\,\-\+\?\/\%#=\&\!]+)/ig , "<a href='$1' class='url'>$1</a>")
+        tweet = tweet.replace(/@([\a-zA-Z0-9_]+)/g , "<a href=#{twitter_url.url}$1>@$1</a>")
+        tweet = tweet.replace(/#([\w一-龠ぁ-んァ-ヴー]+)/g , "<a href=#{twitter_url.url}search/%23$1>#$1</a>")
         if /shindanmaker/.test(tweet)
              tweet = 'また診断メーカーか。'
         if /#[一-龠ぁ-んァ-ヴー０-９]{10,}/.test(tweet)
@@ -130,7 +133,7 @@ $(document).ready ->
         if /gohantabeyo/.test(tweet)
              tweet = 'またごはんか'
 
-        textdiv.text(tweet)
+        textdiv.html(tweet)
 
     createTimeLink = (arg) ->
         timelink = $('<a>')
