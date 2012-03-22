@@ -1,10 +1,6 @@
 {% extends 'base.html'%}
-{% load cust_filter %}
 {% block title %}スカンディナヴィア半島2{% endblock %}
 {% block content %}
-  <a href="{% url get_home_timeline %}">home_timeline</a>
-  <a href="{% url get_lists%}">lists</a>
-
 <div id="head_box">
   更新時刻: <span id="current_date"></span>
   APILimit<span id="api_limit"> </span>

@@ -31,7 +31,8 @@
           dataTpye: "json"
         });
         alert('発言しました');
-        return $(this).val('');
+        $(this).val('');
+        return $(this).blur();
       }
     });
     $('#status').on('keyup', function(ev) {

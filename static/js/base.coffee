@@ -32,6 +32,7 @@ $(document).ready ->
             alert '発言しました'
             #テキストエリアを消す
             $(@).val('')
+            $(@).blur()
     )
 
     $('#status').on('keyup', (ev)->
