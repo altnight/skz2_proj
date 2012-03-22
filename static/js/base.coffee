@@ -114,7 +114,6 @@ $(document).ready ->
             url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             dataTpye: "json"
             success: (json) ->
-                #pass
                 console.log json
 
 

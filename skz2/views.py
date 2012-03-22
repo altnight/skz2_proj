@@ -188,7 +188,6 @@ def get_list_timeline(request, list_owner, list_name):
 
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    #import pdb;pdb.set_trace()
     rts = request.GET.get('rts')
     list_timeline = api.list_timeline(owner=list_owner, slug=list_name, count = 200, include_entities=True, include_rts=rts)
     list_timeline.reverse()
@@ -206,7 +205,10 @@ def get_list_timeline(request, list_owner, list_name):
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).filter().order_by('-ctime')[:200]
+    lis = api.get_list(owner=list_owner, slug=list_name)
+    list_members = [member.screen_name for member in lis.members()]
+
+    list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).filter(screen_name__in=list_members).order_by('-ctime')[:200]
 
     list_timeline_dict = [TweetMapper(obj).as_dict() for obj in list_timeline_query]
     list_timeline_json = json.dumps(list_timeline_dict)

@@ -114,32 +114,32 @@ class Lists(models.Model):
     class Meta:
         db_table = 'Lists'
 
-class List(models.Model):
-    list1 = models.CharField(u"リストの名前1", max_length=30)
-    list2 = models.CharField(u"リストの名前2", max_length=30)
-    list3 = models.CharField(u"リストの名前3", max_length=30)
-    list4 = models.CharField(u"リストの名前4", max_length=30)
-    list5 = models.CharField(u"リストの名前5", max_length=30)
-    list6 = models.CharField(u"リストの名前6", max_length=30)
-    list7 = models.CharField(u"リストの名前7", max_length=30)
-    list8 = models.CharField(u"リストの名前8", max_length=30)
-    list9 = models.CharField(u"リストの名前9", max_length=30)
-    list10 = models.CharField(u"リストの名前10", max_length=30)
-    list11 = models.CharField(u"リストの名前11", max_length=30)
-    list12 = models.CharField(u"リストの名前12", max_length=30)
-    list13 = models.CharField(u"リストの名前13", max_length=30)
-    list14 = models.CharField(u"リストの名前14", max_length=30)
-    list15 = models.CharField(u"リストの名前15", max_length=30)
-    list16 = models.CharField(u"リストの名前16", max_length=30)
-    list17 = models.CharField(u"リストの名前17", max_length=30)
-    list18 = models.CharField(u"リストの名前18", max_length=30)
-    list19 = models.CharField(u"リストの名前19", max_length=30)
-    list20 = models.CharField(u"リストの名前20", max_length=30)
-    atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
-    user = models.ForeignKey(User, verbose_name=u'ユーザー')
+#class List(models.Model):
+    #list1 = models.CharField(u"リストの名前1", max_length=30)
+    #list2 = models.CharField(u"リストの名前2", max_length=30)
+    #list3 = models.CharField(u"リストの名前3", max_length=30)
+    #list4 = models.CharField(u"リストの名前4", max_length=30)
+    #list5 = models.CharField(u"リストの名前5", max_length=30)
+    #list6 = models.CharField(u"リストの名前6", max_length=30)
+    #list7 = models.CharField(u"リストの名前7", max_length=30)
+    #list8 = models.CharField(u"リストの名前8", max_length=30)
+    #list9 = models.CharField(u"リストの名前9", max_length=30)
+    #list10 = models.CharField(u"リストの名前10", max_length=30)
+    #list11 = models.CharField(u"リストの名前11", max_length=30)
+    #list12 = models.CharField(u"リストの名前12", max_length=30)
+    #list13 = models.CharField(u"リストの名前13", max_length=30)
+    #list14 = models.CharField(u"リストの名前14", max_length=30)
+    #list15 = models.CharField(u"リストの名前15", max_length=30)
+    #list16 = models.CharField(u"リストの名前16", max_length=30)
+    #list17 = models.CharField(u"リストの名前17", max_length=30)
+    #list18 = models.CharField(u"リストの名前18", max_length=30)
+    #list19 = models.CharField(u"リストの名前19", max_length=30)
+    #list20 = models.CharField(u"リストの名前20", max_length=30)
+    #atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
+    #user = models.ForeignKey(User, verbose_name=u'ユーザー')
 
-    def __unicode__(self):
-        return self.list1
+    #def __unicode__(self):
+        #return self.list1
 
-    class Meta:
-        db_table = 'List'
+    #class Meta:
+        #db_table = 'List'
