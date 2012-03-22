@@ -32,7 +32,8 @@
         });
         alert('発言しました');
         $(this).val('');
-        return $(this).blur();
+        $(this).blur();
+        return $('#count').text(max_length);
       }
     });
     $('#status').on('keyup', function(ev) {

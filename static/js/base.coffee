@@ -33,6 +33,7 @@ $(document).ready ->
             #テキストエリアを消す
             $(@).val('')
             $(@).blur()
+            $('#count').text(max_length)
     )
 
     $('#status').on('keyup', (ev)->
