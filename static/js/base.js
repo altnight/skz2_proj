@@ -17,6 +17,7 @@
     max_length = 140;
     $('#count').text(max_length);
     $('#status').on('keypress', function(ev) {
+      var _this = this;
       if (ev.keyCode === 13) {
         if (max_length < $(this).val().length) {
           alert('140字を超えています');
@@ -27,12 +28,12 @@
           data: {
             q: $(this).val()
           },
-          url: "http://127.0.0.1:8000/update_status",
+          url: "http://192.168.56.101:8000/update_status",
           dataTpye: "json",
           success: function() {
             alert("発言しました");
-            $(this).val('');
-            $(this).blur();
+            $(_this).val('');
+            $(_this).blur();
             return $('#count').text(max_length);
           },
           error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -73,7 +74,7 @@
     getAPILimit = function() {
       return $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8000/get_api_limit",
+        url: "http://192.168.56.101:8000/get_api_limit",
         dataTpye: "json",
         success: function(json) {
           return $('#api_limit').append(createAPILimitFormat(json));
@@ -91,7 +92,7 @@
     getHomeTimeline = function() {
       return $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8000/get_home_timeline",
+        url: "http://192.168.56.101:8000/get_home_timeline",
         dataTpye: "json",
         success: function(json) {
           return buildStream(json);
@@ -117,7 +118,7 @@
     getListTimeline = function(list_owner, list_name, include_rts) {
       return $.ajax({
         type: "GET",
-        url: "http://127.0.0.1:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
+        url: "http://192.168.56.101:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
         dataTpye: "json",
         success: function(json) {
           return buildStream(json);

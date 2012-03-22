@@ -26,10 +26,10 @@ $(document).ready ->
                 type: "GET"
                 data:
                     q: $(@).val()
-                #url: "http://192.168.56.101:8000/update_status"
-                url: "http://127.0.0.1:8000/update_status"
+                url: "http://192.168.56.101:8000/update_status"
+                #url: "http://127.0.0.1:8000/update_status"
                 dataTpye: "json"
-                success: ->
+                success: =>
                     alert "発言しました"
                     #テキストエリアを消す
                     $(@).val('')
@@ -77,8 +77,8 @@ $(document).ready ->
     getAPILimit = ->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_api_limit"
-            url: "http://127.0.0.1:8000/get_api_limit"
+            url: "http://192.168.56.101:8000/get_api_limit"
+            #url: "http://127.0.0.1:8000/get_api_limit"
             dataTpye: "json"
             success: (json) ->
                 $('#api_limit').append(createAPILimitFormat(json))
@@ -98,8 +98,8 @@ $(document).ready ->
     getHomeTimeline = ->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_home_timeline"
-            url: "http://127.0.0.1:8000/get_home_timeline"
+            url: "http://192.168.56.101:8000/get_home_timeline"
+            #url: "http://127.0.0.1:8000/get_home_timeline"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
@@ -120,8 +120,8 @@ $(document).ready ->
     getListTimeline = (list_owner, list_name, include_rts)->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
-            url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            #url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
