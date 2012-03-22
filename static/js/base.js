@@ -1,7 +1,7 @@
 (function() {
 
   $(document).ready(function() {
-    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, twitter_url;
+    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createRTImg, createRTSpan, createRTcount, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -148,6 +148,24 @@
       if (/gohantabeyo/.test(tweet)) tweet = 'またごはんか';
       return textdiv.html(tweet);
     };
+    createRTImg = function(arg) {
+      var img;
+      img = $('<img/>');
+      img.attr('src', arg.old_tweet_user_image_url);
+      img.attr('class', 'retweeted');
+      return img.attr('alt', arg.old_tweet_screen_name);
+    };
+    createRTSpan = function(arg) {
+      var span;
+      span = $('<span>');
+      return span.text(arg.old_tweet_screen_name);
+    };
+    createRTcount = function(arg) {
+      var retweeted_count, span;
+      span = $('<span>');
+      retweeted_count = parseInt(arg.retweeted_count) + 1;
+      return span.text("RT&" + retweeted_count);
+    };
     createTimeLink = function(arg) {
       var time, timelink;
       timelink = $('<a>');
@@ -166,7 +184,14 @@
         tweetdiv.append(createImage(arg));
         tweetdiv.append(createUserName(arg));
         tweetdiv.append(createText(arg));
-        _results.push(tweetdiv.append(createTimeLink(arg)));
+        tweetdiv.append(createTimeLink(arg));
+        if (arg.old_tweet_screen_name) {
+          tweetdiv.append(createRTImg(arg));
+          tweetdiv.append(createRTSpan(arg));
+          _results.push(tweetdiv.append(createRTcount(arg)));
+        } else {
+          _results.push(void 0);
+        }
       }
       return _results;
     };
@@ -183,7 +208,7 @@
       };
     };
     mainStream = function() {
-      return getListTimeline("altnight", "net", "True");
+      return getListTimeline("altnight", "skz", "True");
     };
     return mainStream();
   });

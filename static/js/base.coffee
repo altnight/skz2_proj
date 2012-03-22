@@ -110,12 +110,11 @@ $(document).ready ->
     getListTimeline = (list_owner, list_name, include_rts)->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?include_rts"
+            #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
-
 
     createTweetdiv = (arg) ->
         tweetdiv = $("<div>")
@@ -155,6 +154,21 @@ $(document).ready ->
 
         textdiv.html(tweet)
 
+    createRTImg = (arg) ->
+        img = $('<img/>')
+        img.attr('src', arg.old_tweet_user_image_url)
+        img.attr('class', 'retweeted')
+        img.attr('alt', arg.old_tweet_screen_name)
+
+    createRTSpan = (arg) ->
+        span = $('<span>')
+        span.text(arg.old_tweet_screen_name)
+
+    createRTcount = (arg) ->
+        span = $('<span>')
+        retweeted_count = parseInt(arg.retweeted_count) + 1
+        span.text("RT&#{retweeted_count}")
+
     createTimeLink = (arg) ->
         timelink = $('<a>')
         timelink.attr('href', "#{twitter_url.url}#{arg.screen_name}/status/#{arg.status_id}")
@@ -170,6 +184,10 @@ $(document).ready ->
            tweetdiv.append(createUserName(arg))
            tweetdiv.append(createText(arg))
            tweetdiv.append(createTimeLink(arg))
+           if arg.old_tweet_screen_name
+               tweetdiv.append(createRTImg(arg))
+               tweetdiv.append(createRTSpan(arg))
+               tweetdiv.append(createRTcount(arg))
 
     buildColumn = ->
         column_id = 0
@@ -186,7 +204,7 @@ $(document).ready ->
     #getListTimeline("__altnight__", "list2", "True")
     mainStream = ->
         #getHomeTimeline()
-        getListTimeline("altnight", "net", "True")
+        getListTimeline("altnight", "skz", "True")
     #build_column = buildColumn()
     mainStream()
     #=========================
