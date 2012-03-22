@@ -107,14 +107,14 @@ $(document).ready ->
             success: (json) ->
                 console.log json
 
-    getListTimeLine = (list_owner, list_name, include_rts)->
+    getListTimeline = (list_owner, list_name, include_rts)->
         $.ajax
             type: "GET"
             #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?include_rts"
             url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             dataTpye: "json"
             success: (json) ->
-                console.log json
+                buildStream(json)
 
 
     createTweetdiv = (arg) ->
@@ -142,7 +142,6 @@ $(document).ready ->
         textdiv = $('<div>')
         textdiv.attr('class', 'text')
 
-        #debugger
         tweet = arg.text
         tweet = tweet.replace(/(https?:\/\/[\w\.\,\-\+\?\/\%#=\&\!]+)/ig , "<a href='$1' class='url'>$1</a>")
         tweet = tweet.replace(/@([\a-zA-Z0-9_]+)/g , "<a href=#{twitter_url.url}$1>@$1</a>")
@@ -164,16 +163,30 @@ $(document).ready ->
         timelink.text(time)
 
     buildStream = (json) ->
-        for arg in json
-            #debugger
-            tweetdiv = createTweetdiv(arg)
-            $("#column1").append(tweetdiv)
-            tweetdiv.append(createImage(arg))
-            tweetdiv.append(createUserName(arg))
-            tweetdiv.append(createText(arg))
-            tweetdiv.append(createTimeLink(arg))
+       for arg in json
+           tweetdiv = createTweetdiv(arg)
+           $("#column1").append(tweetdiv)
+           tweetdiv.append(createImage(arg))
+           tweetdiv.append(createUserName(arg))
+           tweetdiv.append(createText(arg))
+           tweetdiv.append(createTimeLink(arg))
 
+    buildColumn = ->
+        column_id = 0
+        incID: ->
+            column_id++
+        getCloumnID: ->
+            return column_id
+    #=========================
+
+    #=========================
     #試験的に実行している
-    getHomeTimeline()
-    getLists()
-    getListTimeLine("__altnight__", "list2", "True")
+    #getHomeTimeline()
+    #getLists()
+    #getListTimeline("__altnight__", "list2", "True")
+    mainStream = ->
+        #getHomeTimeline()
+        getListTimeline("altnight", "net", "True")
+    #build_column = buildColumn()
+    mainStream()
+    #=========================

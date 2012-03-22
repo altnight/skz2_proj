@@ -1,7 +1,7 @@
 (function() {
 
   $(document).ready(function() {
-    var buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeLine, getLists, max_length, twitter_url;
+    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -100,13 +100,13 @@
         }
       });
     };
-    getListTimeLine = function(list_owner, list_name, include_rts) {
+    getListTimeline = function(list_owner, list_name, include_rts) {
       return $.ajax({
         type: "GET",
         url: "http://127.0.0.1:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
         dataTpye: "json",
         success: function(json) {
-          return console.log(json);
+          return buildStream(json);
         }
       });
     };
@@ -170,9 +170,22 @@
       }
       return _results;
     };
-    getHomeTimeline();
-    getLists();
-    return getListTimeLine("__altnight__", "list2", "True");
+    buildColumn = function() {
+      var column_id;
+      column_id = 0;
+      return {
+        incID: function() {
+          return column_id++;
+        },
+        getCloumnID: function() {
+          return column_id;
+        }
+      };
+    };
+    mainStream = function() {
+      return getListTimeline("altnight", "net", "True");
+    };
+    return mainStream();
   });
 
 }).call(this);
