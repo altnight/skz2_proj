@@ -22,18 +22,23 @@
           alert('140字を超えています');
           return false;
         }
-        $.ajax({
+        return $.ajax({
           type: "GET",
           data: {
             q: $(this).val()
           },
           url: "http://127.0.0.1:8000/update_status",
-          dataTpye: "json"
+          dataTpye: "json",
+          success: function() {
+            alert("発言しました");
+            $(this).val('');
+            $(this).blur();
+            return $('#count').text(max_length);
+          },
+          error: function(XMLHttpRequest, textStatus, errorThrown) {
+            return alert("なんか発言失敗したっぽい");
+          }
         });
-        alert('発言しました');
-        $(this).val('');
-        $(this).blur();
-        return $('#count').text(max_length);
       }
     });
     $('#status').on('keyup', function(ev) {
@@ -72,6 +77,9 @@
         dataTpye: "json",
         success: function(json) {
           return $('#api_limit').append(createAPILimitFormat(json));
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          return $('#api_limit').append("さーせん、うまくいかなかったっす");
         }
       });
     };
@@ -87,6 +95,9 @@
         dataTpye: "json",
         success: function(json) {
           return buildStream(json);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          return alert("さーせん、うまくとれなかったっす");
         }
       });
     };
@@ -97,6 +108,9 @@
         dataTpye: "json",
         success: function(json) {
           return console.log(json);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          return alert("さーせん、うまくとれなかったっす");
         }
       });
     };
@@ -107,6 +121,9 @@
         dataTpye: "json",
         success: function(json) {
           return buildStream(json);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          return alert("さーせん、うまくとれなかったっす");
         }
       });
     };

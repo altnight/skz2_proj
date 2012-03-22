@@ -29,11 +29,14 @@ $(document).ready ->
                 #url: "http://192.168.56.101:8000/update_status"
                 url: "http://127.0.0.1:8000/update_status"
                 dataTpye: "json"
-            alert '発言しました'
-            #テキストエリアを消す
-            $(@).val('')
-            $(@).blur()
-            $('#count').text(max_length)
+                success: ->
+                    alert "発言しました"
+                    #テキストエリアを消す
+                    $(@).val('')
+                    $(@).blur()
+                    $('#count').text(max_length)
+                error: (XMLHttpRequest, textStatus, errorThrown)->
+                    alert "なんか発言失敗したっぽい"
     )
 
     $('#status').on('keyup', (ev)->
@@ -79,6 +82,9 @@ $(document).ready ->
             dataTpye: "json"
             success: (json) ->
                 $('#api_limit').append(createAPILimitFormat(json))
+            error: (XMLHttpRequest, textStatus, errorThrown)->
+                $('#api_limit').append("さーせん、うまくいかなかったっす")
+
 
     getAPILimit()
     #=========================
@@ -97,6 +103,8 @@ $(document).ready ->
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
+            error: (XMLHttpRequest, textStatus, errorThrown)->
+                alert "さーせん、うまくとれなかったっす"
 
     getLists = ->
         $.ajax
@@ -106,6 +114,8 @@ $(document).ready ->
             dataTpye: "json"
             success: (json) ->
                 console.log json
+            error: (XMLHttpRequest, textStatus, errorThrown)->
+                alert "さーせん、うまくとれなかったっす"
 
     getListTimeline = (list_owner, list_name, include_rts)->
         $.ajax
@@ -115,6 +125,8 @@ $(document).ready ->
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
+            error: (XMLHttpRequest, textStatus, errorThrown)->
+                alert "さーせん、うまくとれなかったっす"
 
     createTweetdiv = (arg) ->
         tweetdiv = $("<div>")

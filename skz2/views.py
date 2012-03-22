@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError, HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 #from django.shortcuts import get_object_or_404
 from django.utils import simplejson as json
@@ -80,14 +79,20 @@ def update_status(request):
     api = tweepy.API(auth_handler=auth)
     try:
         api.update_status(request.GET.get('q'))
-    except Exception:
-        print Exception
+    except Exception, e:
+        print "発言失敗したっぽい"
+        return HttpResponseServerError()
+    return HttpResponse()
 
 def get_home_timeline(request):
 
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    home_timeline = api.home_timeline(count = 200, since_id=request.session.get('home_timeline_since_id'), include_entities=True)
+    try:
+        home_timeline = api.home_timeline(count = 200, since_id=request.session.get('home_timeline_since_id'), include_entities=True)
+    except Exception, e:
+        print "取得失敗したっぽい"
+        return HttpResponseServerError()
     home_timeline.reverse()
     for tweet in home_timeline:
 
@@ -112,7 +117,11 @@ def get_home_timeline(request):
 def get_lists(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    lists = api.lists()
+    try:
+        lists = api.lists()
+    except Exception, e:
+        print e
+        return HttpResponseServerError()
     lists.reverse()
 
     #一度既存のリスト一覧を削除
@@ -133,7 +142,10 @@ def get_lists(request):
 def get_mentions(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    mentions = api.mentions(count = 50, since_id=request.session.get('mentions_since_id'), include_entities=True)
+    try:
+        mentions = api.mentions(count = 50, since_id=request.session.get('mentions_since_id'), include_entities=True)
+    except Exception, e:
+        return HttpResponseServerError()
     mentions.reverse()
     for tweet in mentions:
 
@@ -153,7 +165,10 @@ def get_mentions(request):
 def get_direct_messages(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    direct_messages = api.direct_messages(count = 30, include_entities=True)
+    try:
+        direct_messages = api.direct_messages(count = 30, include_entities=True)
+    except Exception, e:
+        return HttpResponseServerError()
     direct_messages.reverse()
     for tweet in direct_messages:
 
@@ -170,7 +185,10 @@ def get_direct_messages(request):
 def get_sent_direct_messages(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    sent_direct_messages = api.sent_direct_messages(count = 30, include_entities=True)
+    try:
+        sent_direct_messages = api.sent_direct_messages(count = 30, include_entities=True)
+    except Exception, e:
+        return HttpResponseServerError()
     sent_direct_messages.reverse()
     for tweet in sent_direct_messages:
 
@@ -189,10 +207,16 @@ def get_list_timeline(request, list_owner, list_name):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     rts = request.GET.get('rts')
-    list_timeline = api.list_timeline(owner=list_owner, slug=list_name, count = 200, include_entities=True, include_rts=rts)
+    try:
+        list_timeline = api.list_timeline(owner=list_owner, slug=list_name, count = 200, include_entities=True, include_rts=rts)
+    except Exception, e:
+        return HttpResponseServerError()
     list_timeline.reverse()
 
-    lis = api.get_list(owner=list_owner, slug=list_name)
+    try:
+        lis = api.get_list(owner=list_owner, slug=list_name)
+    except Exception, e:
+        return HttpResponseServerError()
     list_members = [member.screen_name for member in lis.members()]
 
     for tweet in list_timeline:
@@ -211,9 +235,7 @@ def get_list_timeline(request, list_owner, list_name):
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-
     list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).filter(screen_name__in=list_members).order_by('-ctime')[:200]
-    print list_members
 
     list_timeline_dict = [TweetMapper(obj).as_dict() for obj in list_timeline_query]
     list_timeline_json = json.dumps(list_timeline_dict)
@@ -223,7 +245,10 @@ def get_list_timeline(request, list_owner, list_name):
 def get_api_limit(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
-    api_limit = api.rate_limit_status()
+    try:
+        api_limit = api.rate_limit_status()
+    except Exception, e:
+        return HttpResponseServerError()
 
     remaining = api_limit['remaining_hits']
     hourly_limit = api_limit['hourly_limit']
