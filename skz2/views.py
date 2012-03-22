@@ -191,6 +191,10 @@ def get_list_timeline(request, list_owner, list_name):
     rts = request.GET.get('rts')
     list_timeline = api.list_timeline(owner=list_owner, slug=list_name, count = 200, include_entities=True, include_rts=rts)
     list_timeline.reverse()
+
+    lis = api.get_list(owner=list_owner, slug=list_name)
+    list_members = [member.screen_name for member in lis.members()]
+
     for tweet in list_timeline:
 
         #if tweet == list_timeline[0]:
@@ -201,14 +205,15 @@ def get_list_timeline(request, list_owner, list_name):
         if hasattr(tweet, 'retweeted_status'):
             old_tweet = tweet
             tweet = tweet.retweeted_status
+            #公式RTした人もlist_membersに加える
+            list_members.append(tweet.user.screen_name)
 
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    lis = api.get_list(owner=list_owner, slug=list_name)
-    list_members = [member.screen_name for member in lis.members()]
 
     list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).filter(screen_name__in=list_members).order_by('-ctime')[:200]
+    print list_members
 
     list_timeline_dict = [TweetMapper(obj).as_dict() for obj in list_timeline_query]
     list_timeline_json = json.dumps(list_timeline_dict)
