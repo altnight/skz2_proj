@@ -8,7 +8,7 @@ class User(models.Model):
     atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
     access_token = models.CharField(u'access_token',max_length=255)
     access_token_secret = models.CharField(u'access_token_secret',max_length=255)
-    #is_active = models.BooleanField(default=True)
+    #activated = models.BooleanField(default=True)
 
     def __unicode__(self):
         return self.name
@@ -25,10 +25,9 @@ class Tweet(models.Model):
     text = models.CharField(u"本文", max_length=140)
     source = models.CharField(u"source", max_length=30)
     source_url = models.CharField(u"source_url", max_length=50)
-    in_reply_to_status_id = models.CharField(u"in_reply_to", max_length=40, blank=True, null=True)
-    #since_id = models.CharField(u"since_id", max_length=30)
+    #in_reply_to_status_id = models.CharField(u"in_reply_to", max_length=40, blank=True, null=True)
     favorited = models.BooleanField(u"fav")
-    created_at = models.CharField(u'作成日時', max_length=40)
+    created_at = models.CharField(u'ツイートの作成日時', max_length=40)
     protected = models.BooleanField(u"protect")
     old_tweet_screen_name = models.CharField(u'retweetした人のscreen_name',  max_length=20, blank=True, null=True)
     old_tweet_user_image_url = models.CharField(u'retweetした人のuser_image', max_length=200, blank=True, null=True)
@@ -59,7 +58,7 @@ class Tweet(models.Model):
                 screen_name = tweet.user.screen_name,
                 user_image_url = tweet.user.profile_image_url,
                 text = text,
-                in_reply_to_status_id = tweet.in_reply_to_status_id,
+                #in_reply_to_status_id = tweet.in_reply_to_status_id,
                 favorited = tweet.favorited,
                 created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
                 protected = tweet.user.protected,
@@ -77,7 +76,7 @@ class Tweet(models.Model):
                 screen_name = tweet.user.screen_name,
                 user_image_url = tweet.user.profile_image_url,
                 text = text,
-                in_reply_to_status_id = tweet.in_reply_to_status_id,
+                #in_reply_to_status_id = tweet.in_reply_to_status_id,
                 favorited = tweet.favorited,
                 created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
                 protected = tweet.user.protected,
@@ -95,7 +94,7 @@ class Tweet(models.Model):
                 screen_name = tweet.sender_screen_name,
                 user_image_url = tweet.sender.profile_image_url,
                 text = text,
-                in_reply_to_status_id = tweet.id_str,
+                #in_reply_to_status_id = tweet.id_str,
                 created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
                 user = request.session.get('session_user'),
                )
@@ -114,3 +113,33 @@ class Lists(models.Model):
 
     class Meta:
         db_table = 'Lists'
+
+class List(models.Model):
+    list1 = models.CharField(u"リストの名前1", max_length=30)
+    list2 = models.CharField(u"リストの名前2", max_length=30)
+    list3 = models.CharField(u"リストの名前3", max_length=30)
+    list4 = models.CharField(u"リストの名前4", max_length=30)
+    list5 = models.CharField(u"リストの名前5", max_length=30)
+    list6 = models.CharField(u"リストの名前6", max_length=30)
+    list7 = models.CharField(u"リストの名前7", max_length=30)
+    list8 = models.CharField(u"リストの名前8", max_length=30)
+    list9 = models.CharField(u"リストの名前9", max_length=30)
+    list10 = models.CharField(u"リストの名前10", max_length=30)
+    list11 = models.CharField(u"リストの名前11", max_length=30)
+    list12 = models.CharField(u"リストの名前12", max_length=30)
+    list13 = models.CharField(u"リストの名前13", max_length=30)
+    list14 = models.CharField(u"リストの名前14", max_length=30)
+    list15 = models.CharField(u"リストの名前15", max_length=30)
+    list16 = models.CharField(u"リストの名前16", max_length=30)
+    list17 = models.CharField(u"リストの名前17", max_length=30)
+    list18 = models.CharField(u"リストの名前18", max_length=30)
+    list19 = models.CharField(u"リストの名前19", max_length=30)
+    list20 = models.CharField(u"リストの名前20", max_length=30)
+    atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
+    user = models.ForeignKey(User, verbose_name=u'ユーザー')
+
+    def __unicode__(self):
+        return self.list1
+
+    class Meta:
+        db_table = 'List'

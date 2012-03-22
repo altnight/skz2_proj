@@ -69,7 +69,7 @@ $(document).ready ->
         remaining = json.remaining
         hourly_limit= json.hourly_limit
         reset_time= createDateTimeFormat(new Date(json.reset_time))
-        return "#{remaining}/#{hourly_limit} resetTime::#{reset_time}"
+        return "APILimit::#{remaining}/#{hourly_limit} resetTime::#{reset_time}"
 
     getAPILimit = ->
         $.ajax
@@ -97,6 +97,26 @@ $(document).ready ->
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
+
+    getLists = ->
+        $.ajax
+            type: "GET"
+            #url: "http://192.168.56.101:8000/get_lists"
+            url: "http://127.0.0.1:8000/get_lists"
+            dataTpye: "json"
+            success: (json) ->
+                console.log json
+
+    getListTimeLine = (list_owner, list_name, include_rts)->
+        $.ajax
+            type: "GET"
+            #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?include_rts"
+            url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            dataTpye: "json"
+            success: (json) ->
+                #pass
+                console.log json
+
 
     createTweetdiv = (arg) ->
         tweetdiv = $("<div>")
@@ -156,3 +176,5 @@ $(document).ready ->
 
     #試験的に実行している
     getHomeTimeline()
+    getLists()
+    getListTimeLine("__altnight__", "list2", "True")

@@ -206,12 +206,12 @@ def get_list_timeline(request, list_owner, list_name):
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
+    list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).filter().order_by('-ctime')[:200]
 
     list_timeline_dict = [TweetMapper(obj).as_dict() for obj in list_timeline_query]
     list_timeline_json = json.dumps(list_timeline_dict)
     return HttpResponse(list_timeline_json, mimetype='application/json')
-    #return direct_to_template(request, "skz2.html", {"tweets":list_timeline_query})
+    #return direct_to_template(request, "skz2.html.orig", {"tweets":list_timeline_query})
 
 def get_api_limit(request):
     auth = setOAuth(request)

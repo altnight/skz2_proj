@@ -1,7 +1,7 @@
 (function() {
 
   $(document).ready(function() {
-    var buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, max_length, twitter_url;
+    var buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeLine, getLists, max_length, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -63,7 +63,7 @@
       remaining = json.remaining;
       hourly_limit = json.hourly_limit;
       reset_time = createDateTimeFormat(new Date(json.reset_time));
-      return "" + remaining + "/" + hourly_limit + " resetTime::" + reset_time;
+      return "APILimit::" + remaining + "/" + hourly_limit + " resetTime::" + reset_time;
     };
     getAPILimit = function() {
       return $.ajax({
@@ -87,6 +87,26 @@
         dataTpye: "json",
         success: function(json) {
           return buildStream(json);
+        }
+      });
+    };
+    getLists = function() {
+      return $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/get_lists",
+        dataTpye: "json",
+        success: function(json) {
+          return console.log(json);
+        }
+      });
+    };
+    getListTimeLine = function(list_owner, list_name, include_rts) {
+      return $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
+        dataTpye: "json",
+        success: function(json) {
+          return console.log(json);
         }
       });
     };
@@ -150,7 +170,9 @@
       }
       return _results;
     };
-    return getHomeTimeline();
+    getHomeTimeline();
+    getLists();
+    return getListTimeLine("__altnight__", "list2", "True");
   });
 
 }).call(this);
