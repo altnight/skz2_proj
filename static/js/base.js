@@ -16,7 +16,7 @@
     });
     max_length = 140;
     $('#count').text(max_length);
-    $('#status').on('keyup', function(ev) {
+    $('#status').on('keypress', function(ev) {
       if (ev.keyCode === 13) {
         if (max_length < $(this).val().length) {
           alert('140字を超えています');

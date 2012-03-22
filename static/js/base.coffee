@@ -17,7 +17,7 @@ $(document).ready ->
     max_length= 140
     $('#count').text(max_length)
 
-    $('#status').on('keyup', (ev)->
+    $('#status').on('keypress', (ev)->
         if ev.keyCode == 13 #Enter
             if max_length < $(@).val().length
                 alert '140字を超えています'
