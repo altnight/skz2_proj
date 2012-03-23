@@ -197,9 +197,12 @@ $ ->
         button.attr('alt', 'replyButton')
         button.attr('class', 'reply')
 
-    createFavButton = ->
+    createFavButton = (arg) ->
         button = $('<img/>')
-        button.attr('src', 'static/image/favorite.png')
+        if arg.favorited
+            button.attr('src', 'static/image/favorite_on.png')
+        else
+            button.attr('src', 'static/image/favorite.png')
         button.attr('alt', 'FavButton')
         button.attr('class', 'fav')
 
@@ -218,7 +221,7 @@ $ ->
            tweetdiv.append(createText(arg))
            tweetdiv.append(createTimeLink(arg))
            tweetdiv.append(createReplyButton())
-           tweetdiv.append(createFavButton())
+           tweetdiv.append(createFavButton(arg))
            tweetdiv.append(createRTButton())
            #公式RTの場合
            if arg.old_tweet_screen_name
@@ -265,8 +268,11 @@ $ ->
     $('.fav').live("mouseenter", ->
         if $(@).attr('src') == './static/image/favorite_on.png'
             return false
+        else if $(@).attr('src') == './static/image/favorite_hover.png'
+             return false
         $(@).attr('src', './static/image/favorite_hover.png')
     )
+    #TODO:既にfavってるものに対しての挙動がおかしい
     $('.fav').live("mouseleave", ->
         if $(@).attr('src') == './static/image/favorite_on.png'
             return false

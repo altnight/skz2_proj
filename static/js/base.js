@@ -200,10 +200,14 @@
       button.attr('alt', 'replyButton');
       return button.attr('class', 'reply');
     };
-    createFavButton = function() {
+    createFavButton = function(arg) {
       var button;
       button = $('<img/>');
-      button.attr('src', 'static/image/favorite.png');
+      if (arg.favorited) {
+        button.attr('src', 'static/image/favorite_on.png');
+      } else {
+        button.attr('src', 'static/image/favorite.png');
+      }
       button.attr('alt', 'FavButton');
       return button.attr('class', 'fav');
     };
@@ -226,7 +230,7 @@
         tweetdiv.append(createText(arg));
         tweetdiv.append(createTimeLink(arg));
         tweetdiv.append(createReplyButton());
-        tweetdiv.append(createFavButton());
+        tweetdiv.append(createFavButton(arg));
         tweetdiv.append(createRTButton());
         if (arg.old_tweet_screen_name) {
           tweetdiv.append(createRTImg(arg));
@@ -280,7 +284,11 @@
       return $(this).attr('src', './static/image/reply.png');
     });
     $('.fav').live("mouseenter", function() {
-      if ($(this).attr('src') === './static/image/favorite_on.png') return false;
+      if ($(this).attr('src') === './static/image/favorite_on.png') {
+        return false;
+      } else if ($(this).attr('src') === './static/image/favorite_hover.png') {
+        return false;
+      }
       return $(this).attr('src', './static/image/favorite_hover.png');
     });
     $('.fav').live("mouseleave", function() {
