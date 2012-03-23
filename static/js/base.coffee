@@ -27,8 +27,8 @@ $ ->
                 data:
                     q: $(@).val()
                     in_reply_to_status_id: localStorage.in_reply_to_status_id
-                #url: "http://192.168.56.101:8000/update_status"
-                url: "http://127.0.0.1:8000/update_status"
+                url: "http://192.168.56.101:8000/update_status"
+                #url: "http://127.0.0.1:8000/update_status"
                 dataTpye: "json"
                 success: =>
                     alert "発言しました"
@@ -78,8 +78,8 @@ $ ->
     getAPILimit = ->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_api_limit"
-            url: "http://127.0.0.1:8000/get_api_limit"
+            url: "http://192.168.56.101:8000/get_api_limit"
+            #url: "http://127.0.0.1:8000/get_api_limit"
             dataTpye: "json"
             success: (json) ->
                 $('#api_limit').append(createAPILimitFormat(json))
@@ -95,8 +95,8 @@ $ ->
     getHomeTimeline = ->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_home_timeline"
-            url: "http://127.0.0.1:8000/get_home_timeline"
+            url: "http://192.168.56.101:8000/get_home_timeline"
+            #url: "http://127.0.0.1:8000/get_home_timeline"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
@@ -106,8 +106,8 @@ $ ->
     getLists = ->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_lists"
-            url: "http://127.0.0.1:8000/get_lists"
+            url: "http://192.168.56.101:8000/get_lists"
+            #url: "http://127.0.0.1:8000/get_lists"
             dataTpye: "json"
             success: (json) ->
                 console.log json
@@ -117,8 +117,8 @@ $ ->
     getListTimeline = (list_owner, list_name, include_rts)->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
-            url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            #url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
@@ -242,8 +242,8 @@ $ ->
     toggleFav = (id) ->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/toggleFav"
-            url: "http://127.0.0.1:8000/toggleFav"
+            url: "http://192.168.56.101:8000/toggleFav"
+            #url: "http://127.0.0.1:8000/toggleFav"
             data:
                 id: id
             dataTpye: "json"
@@ -261,8 +261,8 @@ $ ->
     toggleRT = (id) ->
         $.ajax
             type: "GET"
-            #url: "http://192.168.56.101:8000/toggleRT"
-            url: "http://127.0.0.1:8000/toggleRT"
+            url: "http://192.168.56.101:8000/toggleRT"
+            #url: "http://127.0.0.1:8000/toggleRT"
             data:
                 id: id
             dataTpye: "json"

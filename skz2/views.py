@@ -291,7 +291,6 @@ def toggleRT(request):
     tweet_id = request.GET.get('id')
 
     #TODO:retweeted_by_me()から該当のtweetを探してdestroy_statusする
-    #import pdb;pdb.set_trace()
     #RT状態をチェックする
     try:
         retweeted= api.get_status(tweet_id).retweeted
@@ -306,10 +305,11 @@ def toggleRT(request):
             return HttpResponseServerError()
         return HttpResponse('{"retweeted":"True", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
 
+    return HttpResponse()
     #RTされている場合
-    else:
-        try:
-            api.retweet(tweet_id)
-        except Exception, e:
-            return HttpResponseServerError()
-        return HttpResponse('{"retweeted":"False", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
+    #else:
+        #try:
+            #api.retweet(tweet_id)
+        #except Exception, e:
+            #return HttpResponseServerError()
+        #return HttpResponse('{"retweeted":"False", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
