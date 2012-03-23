@@ -78,7 +78,7 @@ def update_status(request):
     auth = setOAuth(request)
     api = tweepy.API(auth_handler=auth)
     try:
-        api.update_status(request.GET.get('q'))
+        api.update_status(status=request.GET.get('q'), in_reply_to_status_id=request.GET.get('in_reply_to_status_id'))
     except Exception, e:
         print "発言失敗したっぽい"
         return HttpResponseServerError()

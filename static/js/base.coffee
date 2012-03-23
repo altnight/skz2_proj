@@ -26,6 +26,7 @@ $ ->
                 type: "GET"
                 data:
                     q: $(@).val()
+                    in_reply_to_status_id: localStorage.in_reply_to_status_id
                 #url: "http://192.168.56.101:8000/update_status"
                 url: "http://127.0.0.1:8000/update_status"
                 dataTpye: "json"
@@ -252,6 +253,15 @@ $ ->
     )
     $('.retweet').live("mouseleave", ->
         $(@).attr('src', 'static/image/retweet.png')
+    )
+    #各ボタンの実行イベント
+    #=========================
+    $('.reply').live('click', ->
+        tweet = $(@).parent()
+        id = tweet.attr('id')
+        screen_name = $("##{id} .text").children()[0].text
+        localStorage.in_reply_to_status_id = id
+        $('#status').val("#{screen_name} ")
     )
 
     #=========================

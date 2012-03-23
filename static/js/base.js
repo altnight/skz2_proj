@@ -26,7 +26,8 @@
         return $.ajax({
           type: "GET",
           data: {
-            q: $(this).val()
+            q: $(this).val(),
+            in_reply_to_status_id: localStorage.in_reply_to_status_id
           },
           url: "http://127.0.0.1:8000/update_status",
           dataTpye: "json",
@@ -266,6 +267,14 @@
     });
     $('.retweet').live("mouseleave", function() {
       return $(this).attr('src', 'static/image/retweet.png');
+    });
+    $('.reply').live('click', function() {
+      var id, screen_name, tweet;
+      tweet = $(this).parent();
+      id = tweet.attr('id');
+      screen_name = $("#" + id + " .text").children()[0].text;
+      localStorage.in_reply_to_status_id = id;
+      return $('#status').val("" + screen_name + " ");
     });
     mainStream = function() {
       return getListTimeline("altnight", "skz", "True");
