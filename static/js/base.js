@@ -267,29 +267,31 @@
       });
     };
     toggleFavView = function(json) {
-      debugger;      if (!json.favorited) {
-        return $("#" + json.tweet_id).attr('src', 'static/image/favorite_on.png');
-      } else {
-        return $("#" + json.tweet_id).attr('src', 'static/image/favorite.png');
+      if (json.favorited === "True") {
+        return $("#" + json.tweet_id + " .fav").attr('src', './static/image/favorite_on.png');
+      } else if (json.favorited === "False") {
+        return $("#" + json.tweet_id + " .fav").attr('src', './static/image/favorite.png');
       }
     };
     $('.reply').live("mouseenter", function() {
-      return $(this).attr('src', 'static/image/reply_hover.png');
+      return $(this).attr('src', './static/image/reply_hover.png');
     });
     $('.reply').live("mouseleave", function() {
-      return $(this).attr('src', 'static/image/reply.png');
+      return $(this).attr('src', './static/image/reply.png');
     });
     $('.fav').live("mouseenter", function() {
-      return $(this).attr('src', 'static/image/favorite_hover.png');
+      if ($(this).attr('src') === './static/image/favorite_on.png') return false;
+      return $(this).attr('src', './static/image/favorite_hover.png');
     });
     $('.fav').live("mouseleave", function() {
-      return $(this).attr('src', 'static/image/favorite.png');
+      if ($(this).attr('src') === './static/image/favorite_on.png') return false;
+      return $(this).attr('src', './static/image/favorite.png');
     });
     $('.retweet').live("mouseenter", function() {
-      return $(this).attr('src', 'static/image/retweet_hover.png');
+      return $(this).attr('src', './static/image/retweet_hover.png');
     });
     $('.retweet').live("mouseleave", function() {
-      return $(this).attr('src', 'static/image/retweet.png');
+      return $(this).attr('src', './static/image/retweet.png');
     });
     $('.reply').live('click', function() {
       var id, screen_name, tweet;

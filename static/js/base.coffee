@@ -247,34 +247,36 @@ $ ->
                 alert "さーせん、うまくとれなかったっす"
 
     toggleFavView = (json)->
-        debugger
-        #favされてないとき
-        if not json.favorited
-            $("##{json.tweet_id}").attr('src', 'static/image/favorite_on.png')
-        else
-            $("##{json.tweet_id}").attr('src', 'static/image/favorite.png')
+        if json.favorited == "True"
+            $("##{json.tweet_id} .fav").attr('src', './static/image/favorite_on.png')
+        else if json.favorited == "False"
+            $("##{json.tweet_id} .fav").attr('src', './static/image/favorite.png')
 
     #=========================
 
     #各ボタンのホバーイベント
     #=========================
     $('.reply').live("mouseenter", ->
-        $(@).attr('src', 'static/image/reply_hover.png')
+        $(@).attr('src', './static/image/reply_hover.png')
     )
     $('.reply').live("mouseleave", ->
-        $(@).attr('src', 'static/image/reply.png')
+        $(@).attr('src', './static/image/reply.png')
     )
     $('.fav').live("mouseenter", ->
-        $(@).attr('src', 'static/image/favorite_hover.png')
+        if $(@).attr('src') == './static/image/favorite_on.png'
+            return false
+        $(@).attr('src', './static/image/favorite_hover.png')
     )
     $('.fav').live("mouseleave", ->
-        $(@).attr('src', 'static/image/favorite.png')
+        if $(@).attr('src') == './static/image/favorite_on.png'
+            return false
+        $(@).attr('src', './static/image/favorite.png')
     )
     $('.retweet').live("mouseenter", ->
-        $(@).attr('src', 'static/image/retweet_hover.png')
+        $(@).attr('src', './static/image/retweet_hover.png')
     )
     $('.retweet').live("mouseleave", ->
-        $(@).attr('src', 'static/image/retweet.png')
+        $(@).attr('src', './static/image/retweet.png')
     )
     #各ボタンの実行イベント
     #=========================

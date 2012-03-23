@@ -275,7 +275,7 @@ def toggleFav(request):
             api.create_favorite(tweet_id)
         except Exception, e:
             return HttpResponseServerError()
-        return HttpResponse('{"favorited":"True", "tweet_id":'+ tweet_id +'}', mimetype='application/json')
+        return HttpResponse('{"favorited":"True", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
 
     #favられている場合
     else:
@@ -283,4 +283,4 @@ def toggleFav(request):
             api.destroy_favorite(tweet_id)
         except Exception, e:
             return HttpResponseServerError()
-        return HttpResponse('{"favorited":"False, "tweet_id":'+ tweet_id +'}', mimetype='application/json')
+        return HttpResponse('{"favorited":"False", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
