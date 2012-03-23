@@ -289,7 +289,7 @@ $ ->
     $('.reply').live('click', ->
         tweet = $(@).parent()
         id = tweet.attr('id')
-        screen_name = $("##{id} .text").children()[0].text
+        screen_name = "@" + $("##{id} .user_icon").attr('alt')
         localStorage.in_reply_to_status_id = id
         $('#status').val("#{screen_name} ")
     )

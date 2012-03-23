@@ -287,7 +287,7 @@
       var id, screen_name, tweet;
       tweet = $(this).parent();
       id = tweet.attr('id');
-      screen_name = $("#" + id + " .text").children()[0].text;
+      screen_name = "@" + $("#" + id + " .user_icon").attr('alt');
       localStorage.in_reply_to_status_id = id;
       return $('#status').val("" + screen_name + " ");
     });
