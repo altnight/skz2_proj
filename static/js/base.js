@@ -1,6 +1,6 @@
 (function() {
 
-  $(document).ready(function() {
+  $(function() {
     var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
@@ -85,10 +85,6 @@
       });
     };
     getAPILimit();
-    twitter_url = {
-      url: "https://twitter.com/",
-      api: "https://api.twitter.com/1/"
-    };
     getHomeTimeline = function() {
       return $.ajax({
         type: "GET",
@@ -127,6 +123,10 @@
           return alert("さーせん、うまくとれなかったっす");
         }
       });
+    };
+    twitter_url = {
+      url: "https://twitter.com/",
+      api: "https://api.twitter.com/1/"
     };
     createTweetdiv = function(arg) {
       var tweetdiv;
@@ -249,14 +249,23 @@
         }
       };
     };
-    $('.reply').hover(function() {
-      return alert('hoge');
+    $('.reply').live("mouseenter", function() {
+      return $(this).attr('src', 'static/image/reply_hover.png');
     });
-    $('.fav').on('click', function() {
-      return alert('fav');
+    $('.reply').live("mouseleave", function() {
+      return $(this).attr('src', 'static/image/reply.png');
     });
-    $('.retweet').on('click', function() {
-      return alert('retweet');
+    $('.fav').live("mouseenter", function() {
+      return $(this).attr('src', 'static/image/favorite_hover.png');
+    });
+    $('.fav').live("mouseleave", function() {
+      return $(this).attr('src', 'static/image/favorite.png');
+    });
+    $('.retweet').live("mouseenter", function() {
+      return $(this).attr('src', 'static/image/retweet_hover.png');
+    });
+    $('.retweet').live("mouseleave", function() {
+      return $(this).attr('src', 'static/image/retweet.png');
     });
     mainStream = function() {
       return getListTimeline("altnight", "skz", "True");

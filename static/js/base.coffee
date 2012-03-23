@@ -1,5 +1,5 @@
-$(document).ready ->
-    #投稿するところをほげほげする
+$ ->
+    #投稿する
     #=========================
     $('#status').on('focus', ->
         $(@).css('rows', 8)
@@ -89,12 +89,8 @@ $(document).ready ->
     getAPILimit()
     #=========================
 
-    #Streamを組み立てる
+    #ajaxでとってくる
     #=========================
-    twitter_url =
-        url: "https://twitter.com/"
-        api: "https://api.twitter.com/1/"
-
     getHomeTimeline = ->
         $.ajax
             type: "GET"
@@ -127,6 +123,12 @@ $(document).ready ->
                 buildStream(json)
             error: (XMLHttpRequest, textStatus, errorThrown)->
                 alert "さーせん、うまくとれなかったっす"
+
+    #Streamを組み立てる
+    #=========================
+    twitter_url =
+        url: "https://twitter.com/"
+        api: "https://api.twitter.com/1/"
 
     createTweetdiv = (arg) ->
         tweetdiv = $("<div>")
@@ -217,6 +219,7 @@ $(document).ready ->
            tweetdiv.append(createReplyButton())
            tweetdiv.append(createFavButton())
            tweetdiv.append(createRTButton())
+           #公式RTの場合
            if arg.old_tweet_screen_name
                tweetdiv.append(createRTImg(arg))
                tweetdiv.append(createRTSpan(arg))
@@ -230,16 +233,25 @@ $(document).ready ->
             return column_id
     #=========================
 
-    #各ボタンのホバーとイベント
+    #各ボタンのホバーイベント
     #=========================
-    $('.reply').hover( ->
-        alert 'hoge'
+    $('.reply').live("mouseenter", ->
+        $(@).attr('src', 'static/image/reply_hover.png')
     )
-    $('.fav').on('click', ->
-        alert 'fav'
+    $('.reply').live("mouseleave", ->
+        $(@).attr('src', 'static/image/reply.png')
     )
-    $('.retweet').on('click', ->
-        alert 'retweet'
+    $('.fav').live("mouseenter", ->
+        $(@).attr('src', 'static/image/favorite_hover.png')
+    )
+    $('.fav').live("mouseleave", ->
+        $(@).attr('src', 'static/image/favorite.png')
+    )
+    $('.retweet').live("mouseenter", ->
+        $(@).attr('src', 'static/image/retweet_hover.png')
+    )
+    $('.retweet').live("mouseleave", ->
+        $(@).attr('src', 'static/image/retweet.png')
     )
 
     #=========================
