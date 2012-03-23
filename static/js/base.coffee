@@ -265,25 +265,25 @@ $ ->
     $('.reply').live("mouseleave", ->
         $(@).attr('src', './static/image/reply.png')
     )
-    $('.fav').live("mouseenter", ->
-        if $(@).attr('src') == './static/image/favorite_on.png'
-            return false
-        else if $(@).attr('src') == './static/image/favorite_hover.png'
-             return false
-        $(@).attr('src', './static/image/favorite_hover.png')
-    )
+    #$('.fav').live("mouseenter", ->
+        #if $(@).attr('src') == './static/image/favorite_on.png'
+            #return false
+        #else if $(@).attr('src') == './static/image/favorite_hover.png'
+             #return false
+        #$(@).attr('src', './static/image/favorite_hover.png')
+    #)
     #TODO:既にfavってるものに対しての挙動がおかしい
-    $('.fav').live("mouseleave", ->
-        if $(@).attr('src') == './static/image/favorite_on.png'
-            return false
-        $(@).attr('src', './static/image/favorite.png')
-    )
-    $('.retweet').live("mouseenter", ->
-        $(@).attr('src', './static/image/retweet_hover.png')
-    )
-    $('.retweet').live("mouseleave", ->
-        $(@).attr('src', './static/image/retweet.png')
-    )
+    #$('.fav').live("mouseleave", ->
+        #if $(@).attr('src') == './static/image/favorite_on.png'
+            #return false
+        #$(@).attr('src', './static/image/favorite.png')
+    #)
+    #$('.retweet').live("mouseenter", ->
+        #$(@).attr('src', './static/image/retweet_hover.png')
+    #)
+    #$('.retweet').live("mouseleave", ->
+        #$(@).attr('src', './static/image/retweet.png')
+    #)
     #各ボタンの実行イベント
     #=========================
     $('.reply').live('click', ->

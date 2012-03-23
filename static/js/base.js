@@ -283,24 +283,6 @@
     $('.reply').live("mouseleave", function() {
       return $(this).attr('src', './static/image/reply.png');
     });
-    $('.fav').live("mouseenter", function() {
-      if ($(this).attr('src') === './static/image/favorite_on.png') {
-        return false;
-      } else if ($(this).attr('src') === './static/image/favorite_hover.png') {
-        return false;
-      }
-      return $(this).attr('src', './static/image/favorite_hover.png');
-    });
-    $('.fav').live("mouseleave", function() {
-      if ($(this).attr('src') === './static/image/favorite_on.png') return false;
-      return $(this).attr('src', './static/image/favorite.png');
-    });
-    $('.retweet').live("mouseenter", function() {
-      return $(this).attr('src', './static/image/retweet_hover.png');
-    });
-    $('.retweet').live("mouseleave", function() {
-      return $(this).attr('src', './static/image/retweet.png');
-    });
     $('.reply').live('click', function() {
       var id, screen_name, tweet;
       tweet = $(this).parent();
