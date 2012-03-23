@@ -232,6 +232,28 @@ $ ->
             column_id++
         getCloumnID: ->
             return column_id
+
+    toggleFav = (id) ->
+        $.ajax
+            type: "GET"
+            #url: "http://192.168.56.101:8000/toggleFav"
+            url: "http://127.0.0.1:8000/toggleFav"
+            data:
+                id: id
+            dataTpye: "json"
+            success: (json) ->
+                toggleFavView(json)
+            error: (XMLHttpRequest, textStatus, errorThrown)->
+                alert "さーせん、うまくとれなかったっす"
+
+    toggleFavView = (json)->
+        debugger
+        #favされてないとき
+        if not json.favorited
+            $("##{json.tweet_id}").attr('src', 'static/image/favorite_on.png')
+        else
+            $("##{json.tweet_id}").attr('src', 'static/image/favorite.png')
+
     #=========================
 
     #各ボタンのホバーイベント
@@ -262,6 +284,12 @@ $ ->
         screen_name = $("##{id} .text").children()[0].text
         localStorage.in_reply_to_status_id = id
         $('#status').val("#{screen_name} ")
+    )
+
+    $('.fav').live('click', ->
+        tweet = $(@).parent()
+        id = tweet.attr('id')
+        toggleFav(id)
     )
 
     #=========================

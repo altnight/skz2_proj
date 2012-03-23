@@ -257,3 +257,30 @@ def get_api_limit(request):
     api_limit_dict = {"remaining":remaining, "hourly_limit":hourly_limit, "reset_time":reset_time}
     api_limit_json= json.dumps(api_limit_dict)
     return HttpResponse(api_limit_json, mimetype='application/json')
+
+def toggleFav(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    tweet_id = request.GET.get('id')
+
+    #fav状態をチェックする
+    try:
+        favorited = api.get_status(tweet_id).favorited
+    except Exception, e:
+        return HttpResponseServerError()
+
+    #まだfavられてない場合
+    if not favorited:
+        try:
+            api.create_favorite(tweet_id)
+        except Exception, e:
+            return HttpResponseServerError()
+        return HttpResponse('{"favorited":"True", "tweet_id":'+ tweet_id +'}', mimetype='application/json')
+
+    #favられている場合
+    else:
+        try:
+            api.destroy_favorite(tweet_id)
+        except Exception, e:
+            return HttpResponseServerError()
+        return HttpResponse('{"favorited":"False, "tweet_id":'+ tweet_id +'}', mimetype='application/json')

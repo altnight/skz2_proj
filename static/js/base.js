@@ -1,7 +1,7 @@
 (function() {
 
   $(function() {
-    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, twitter_url;
+    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, toggleFav, toggleFavView, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -250,6 +250,29 @@
         }
       };
     };
+    toggleFav = function(id) {
+      return $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/toggleFav",
+        data: {
+          id: id
+        },
+        dataTpye: "json",
+        success: function(json) {
+          return toggleFavView(json);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          return alert("さーせん、うまくとれなかったっす");
+        }
+      });
+    };
+    toggleFavView = function(json) {
+      debugger;      if (!json.favorited) {
+        return $("#" + json.tweet_id).attr('src', 'static/image/favorite_on.png');
+      } else {
+        return $("#" + json.tweet_id).attr('src', 'static/image/favorite.png');
+      }
+    };
     $('.reply').live("mouseenter", function() {
       return $(this).attr('src', 'static/image/reply_hover.png');
     });
@@ -275,6 +298,12 @@
       screen_name = $("#" + id + " .text").children()[0].text;
       localStorage.in_reply_to_status_id = id;
       return $('#status').val("" + screen_name + " ");
+    });
+    $('.fav').live('click', function() {
+      var id, tweet;
+      tweet = $(this).parent();
+      id = tweet.attr('id');
+      return toggleFav(id);
     });
     mainStream = function() {
       return getListTimeline("altnight", "skz", "True");
