@@ -1,7 +1,7 @@
 (function() {
 
   $(document).ready(function() {
-    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createImage, createRTImg, createRTSpan, createRTcount, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, twitter_url;
+    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -28,7 +28,7 @@
           data: {
             q: $(this).val()
           },
-          url: "http://192.168.56.101:8000/update_status",
+          url: "http://127.0.0.1:8000/update_status",
           dataTpye: "json",
           success: function() {
             alert("発言しました");
@@ -74,7 +74,7 @@
     getAPILimit = function() {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/get_api_limit",
+        url: "http://127.0.0.1:8000/get_api_limit",
         dataTpye: "json",
         success: function(json) {
           return $('#api_limit').append(createAPILimitFormat(json));
@@ -92,7 +92,7 @@
     getHomeTimeline = function() {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/get_home_timeline",
+        url: "http://127.0.0.1:8000/get_home_timeline",
         dataTpye: "json",
         success: function(json) {
           return buildStream(json);
@@ -118,7 +118,7 @@
     getListTimeline = function(list_owner, list_name, include_rts) {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
+        url: "http://127.0.0.1:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
         dataTpye: "json",
         success: function(json) {
           return buildStream(json);
@@ -176,13 +176,13 @@
     createRTSpan = function(arg) {
       var span;
       span = $('<span>');
-      return span.text(arg.old_tweet_screen_name);
+      return span.text("RT::" + arg.old_tweet_screen_name);
     };
     createRTcount = function(arg) {
       var retweeted_count, span;
       span = $('<span>');
       retweeted_count = parseInt(arg.retweeted_count) + 1;
-      return span.text("RT&" + retweeted_count);
+      return span.text("&" + retweeted_count);
     };
     createTimeLink = function(arg) {
       var time, timelink;
@@ -191,6 +191,27 @@
       timelink.attr('class', 'time');
       time = createDateTimeFormat(new Date(arg.created_at));
       return timelink.text(time);
+    };
+    createReplyButton = function() {
+      var button;
+      button = $('<img/>');
+      button.attr('src', 'static/image/reply.png');
+      button.attr('alt', 'replyButton');
+      return button.attr('class', 'reply');
+    };
+    createFavButton = function() {
+      var button;
+      button = $('<img/>');
+      button.attr('src', 'static/image/favorite.png');
+      button.attr('alt', 'FavButton');
+      return button.attr('class', 'fav');
+    };
+    createRTButton = function() {
+      var button;
+      button = $('<img/>');
+      button.attr('src', 'static/image/retweet.png');
+      button.attr('alt', 'RTButton');
+      return button.attr('class', 'retweet');
     };
     buildStream = function(json) {
       var arg, tweetdiv, _i, _len, _results;
@@ -203,6 +224,9 @@
         tweetdiv.append(createUserName(arg));
         tweetdiv.append(createText(arg));
         tweetdiv.append(createTimeLink(arg));
+        tweetdiv.append(createReplyButton());
+        tweetdiv.append(createFavButton());
+        tweetdiv.append(createRTButton());
         if (arg.old_tweet_screen_name) {
           tweetdiv.append(createRTImg(arg));
           tweetdiv.append(createRTSpan(arg));
@@ -225,6 +249,15 @@
         }
       };
     };
+    $('.reply').hover(function() {
+      return alert('hoge');
+    });
+    $('.fav').on('click', function() {
+      return alert('fav');
+    });
+    $('.retweet').on('click', function() {
+      return alert('retweet');
+    });
     mainStream = function() {
       return getListTimeline("altnight", "skz", "True");
     };

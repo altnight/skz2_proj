@@ -26,8 +26,8 @@ $(document).ready ->
                 type: "GET"
                 data:
                     q: $(@).val()
-                url: "http://192.168.56.101:8000/update_status"
-                #url: "http://127.0.0.1:8000/update_status"
+                #url: "http://192.168.56.101:8000/update_status"
+                url: "http://127.0.0.1:8000/update_status"
                 dataTpye: "json"
                 success: =>
                     alert "発言しました"
@@ -77,8 +77,8 @@ $(document).ready ->
     getAPILimit = ->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_api_limit"
-            #url: "http://127.0.0.1:8000/get_api_limit"
+            #url: "http://192.168.56.101:8000/get_api_limit"
+            url: "http://127.0.0.1:8000/get_api_limit"
             dataTpye: "json"
             success: (json) ->
                 $('#api_limit').append(createAPILimitFormat(json))
@@ -98,8 +98,8 @@ $(document).ready ->
     getHomeTimeline = ->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_home_timeline"
-            #url: "http://127.0.0.1:8000/get_home_timeline"
+            #url: "http://192.168.56.101:8000/get_home_timeline"
+            url: "http://127.0.0.1:8000/get_home_timeline"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
@@ -120,8 +120,8 @@ $(document).ready ->
     getListTimeline = (list_owner, list_name, include_rts)->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
-            #url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             dataTpye: "json"
             success: (json) ->
                 buildStream(json)
@@ -174,12 +174,12 @@ $(document).ready ->
 
     createRTSpan = (arg) ->
         span = $('<span>')
-        span.text(arg.old_tweet_screen_name)
+        span.text("RT::#{arg.old_tweet_screen_name}")
 
     createRTcount = (arg) ->
         span = $('<span>')
         retweeted_count = parseInt(arg.retweeted_count) + 1
-        span.text("RT&#{retweeted_count}")
+        span.text("&#{retweeted_count}")
 
     createTimeLink = (arg) ->
         timelink = $('<a>')
@@ -187,6 +187,24 @@ $(document).ready ->
         timelink.attr('class', 'time')
         time = createDateTimeFormat(new Date(arg.created_at))
         timelink.text(time)
+
+    createReplyButton = ->
+        button = $('<img/>')
+        button.attr('src', 'static/image/reply.png')
+        button.attr('alt', 'replyButton')
+        button.attr('class', 'reply')
+
+    createFavButton = ->
+        button = $('<img/>')
+        button.attr('src', 'static/image/favorite.png')
+        button.attr('alt', 'FavButton')
+        button.attr('class', 'fav')
+
+    createRTButton = ->
+        button = $('<img/>')
+        button.attr('src', 'static/image/retweet.png')
+        button.attr('alt', 'RTButton')
+        button.attr('class', 'retweet')
 
     buildStream = (json) ->
        for arg in json
@@ -196,6 +214,9 @@ $(document).ready ->
            tweetdiv.append(createUserName(arg))
            tweetdiv.append(createText(arg))
            tweetdiv.append(createTimeLink(arg))
+           tweetdiv.append(createReplyButton())
+           tweetdiv.append(createFavButton())
+           tweetdiv.append(createRTButton())
            if arg.old_tweet_screen_name
                tweetdiv.append(createRTImg(arg))
                tweetdiv.append(createRTSpan(arg))
@@ -208,6 +229,18 @@ $(document).ready ->
         getCloumnID: ->
             return column_id
     #=========================
+
+    #各ボタンのホバーとイベント
+    #=========================
+    $('.reply').hover( ->
+        alert 'hoge'
+    )
+    $('.fav').on('click', ->
+        alert 'fav'
+    )
+    $('.retweet').on('click', ->
+        alert 'retweet'
+    )
 
     #=========================
     #試験的に実行している
