@@ -1,7 +1,7 @@
 (function() {
 
   $(function() {
-    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, toggleFav, toggleFavView, twitter_url;
+    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, toggleFav, toggleFavView, toggleRT, toggleRTView, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -211,10 +211,14 @@
       button.attr('alt', 'FavButton');
       return button.attr('class', 'fav');
     };
-    createRTButton = function() {
+    createRTButton = function(arg) {
       var button;
       button = $('<img/>');
-      button.attr('src', 'static/image/retweet.png');
+      if (arg.retweeted) {
+        button.attr('src', 'static/image/retweet_on.png');
+      } else {
+        button.attr('src', 'static/image/retweet.png');
+      }
       button.attr('alt', 'RTButton');
       return button.attr('class', 'retweet');
     };
@@ -231,7 +235,7 @@
         tweetdiv.append(createTimeLink(arg));
         tweetdiv.append(createReplyButton());
         tweetdiv.append(createFavButton(arg));
-        tweetdiv.append(createRTButton());
+        tweetdiv.append(createRTButton(arg));
         if (arg.old_tweet_screen_name) {
           tweetdiv.append(createRTImg(arg));
           tweetdiv.append(createRTSpan(arg));
@@ -277,6 +281,29 @@
         return $("#" + json.tweet_id + " .fav").attr('src', './static/image/favorite.png');
       }
     };
+    toggleRT = function(id) {
+      return $.ajax({
+        type: "GET",
+        url: "http://127.0.0.1:8000/toggleRT",
+        data: {
+          id: id
+        },
+        dataTpye: "json",
+        success: function(json) {
+          return toggleRTView(json);
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+          return alert("さーせん、うまくとれなかったっす");
+        }
+      });
+    };
+    toggleRTView = function(json) {
+      if (json.retweeted === "True") {
+        return $("#" + json.tweet_id + " .retweet").attr('src', './static/image/retweet_on.png');
+      } else if (json.retweeted === "False") {
+        return $("#" + json.tweet_id + " .retweet").attr('src', './static/image/retweet.png');
+      }
+    };
     $('.reply').live("mouseenter", function() {
       return $(this).attr('src', './static/image/reply_hover.png');
     });
@@ -296,6 +323,12 @@
       tweet = $(this).parent();
       id = tweet.attr('id');
       return toggleFav(id);
+    });
+    $('.retweet').live('click', function() {
+      var id, tweet;
+      tweet = $(this).parent();
+      id = tweet.attr('id');
+      return toggleRT(id);
     });
     mainStream = function() {
       return getListTimeline("altnight", "skz", "True");

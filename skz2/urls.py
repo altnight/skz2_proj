@@ -18,5 +18,6 @@ urlpatterns = patterns('skz2.views',
     url(r'^get_list_timeline/(?P<list_owner>\w+)/(?P<list_name>\w+)/$', 'get_list_timeline', name='get_list_timeline'),
     url(r'^get_api_limit$', 'get_api_limit', name='get_api_limit'),
     url(r'^toggleFav$', 'toggleFav', name='toggleFav'),
+    url(r'^toggleRT$', 'toggleRT', name='toggleRT'),
 )
 

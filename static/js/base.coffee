@@ -206,9 +206,12 @@ $ ->
         button.attr('alt', 'FavButton')
         button.attr('class', 'fav')
 
-    createRTButton = ->
+    createRTButton = (arg)->
         button = $('<img/>')
-        button.attr('src', 'static/image/retweet.png')
+        if arg.retweeted
+            button.attr('src', 'static/image/retweet_on.png')
+        else
+            button.attr('src', 'static/image/retweet.png')
         button.attr('alt', 'RTButton')
         button.attr('class', 'retweet')
 
@@ -222,7 +225,7 @@ $ ->
            tweetdiv.append(createTimeLink(arg))
            tweetdiv.append(createReplyButton())
            tweetdiv.append(createFavButton(arg))
-           tweetdiv.append(createRTButton())
+           tweetdiv.append(createRTButton(arg))
            #公式RTの場合
            if arg.old_tweet_screen_name
                tweetdiv.append(createRTImg(arg))
@@ -255,6 +258,24 @@ $ ->
         else if json.favorited == "False"
             $("##{json.tweet_id} .fav").attr('src', './static/image/favorite.png')
 
+    toggleRT = (id) ->
+        $.ajax
+            type: "GET"
+            #url: "http://192.168.56.101:8000/toggleRT"
+            url: "http://127.0.0.1:8000/toggleRT"
+            data:
+                id: id
+            dataTpye: "json"
+            success: (json) ->
+                toggleRTView(json)
+            error: (XMLHttpRequest, textStatus, errorThrown)->
+                alert "さーせん、うまくとれなかったっす"
+
+    toggleRTView = (json)->
+        if json.retweeted== "True"
+            $("##{json.tweet_id} .retweet").attr('src', './static/image/retweet_on.png')
+        else if json.retweeted== "False"
+            $("##{json.tweet_id} .retweet").attr('src', './static/image/retweet.png')
     #=========================
 
     #各ボタンのホバーイベント
@@ -298,6 +319,12 @@ $ ->
         tweet = $(@).parent()
         id = tweet.attr('id')
         toggleFav(id)
+    )
+
+    $('.retweet').live('click', ->
+        tweet = $(@).parent()
+        id = tweet.attr('id')
+        toggleRT(id)
     )
 
     #=========================

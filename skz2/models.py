@@ -27,6 +27,7 @@ class Tweet(models.Model):
     source_url = models.CharField(u"source_url", max_length=50)
     #in_reply_to_status_id = models.CharField(u"in_reply_to", max_length=40, blank=True, null=True)
     favorited = models.BooleanField(u"fav")
+    retweeted = models.BooleanField(u"retweet")
     created_at = models.CharField(u'ツイートの作成日時', max_length=40)
     protected = models.BooleanField(u"protect")
     old_tweet_screen_name = models.CharField(u'retweetした人のscreen_name',  max_length=20, blank=True, null=True)
@@ -60,6 +61,7 @@ class Tweet(models.Model):
                 text = text,
                 #in_reply_to_status_id = tweet.in_reply_to_status_id,
                 favorited = tweet.favorited,
+                retweeted = tweet.retweeted,
                 created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
                 protected = tweet.user.protected,
                 source = tweet.source,
@@ -78,6 +80,7 @@ class Tweet(models.Model):
                 text = text,
                 #in_reply_to_status_id = tweet.in_reply_to_status_id,
                 favorited = tweet.favorited,
+                retweeted = tweet.retweeted,
                 created_at = tweet.created_at + datetime.timedelta(0, 3600*9),
                 protected = tweet.user.protected,
                 source = tweet.source,

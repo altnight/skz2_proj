@@ -284,3 +284,32 @@ def toggleFav(request):
         except Exception, e:
             return HttpResponseServerError()
         return HttpResponse('{"favorited":"False", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
+
+def toggleRT(request):
+    auth = setOAuth(request)
+    api = tweepy.API(auth_handler=auth)
+    tweet_id = request.GET.get('id')
+
+    #TODO:retweeted_by_me()から該当のtweetを探してdestroy_statusする
+    #import pdb;pdb.set_trace()
+    #RT状態をチェックする
+    try:
+        retweeted= api.get_status(tweet_id).retweeted
+    except Exception, e:
+        return HttpResponseServerError()
+
+    #まだRTられてない場合
+    if not retweeted:
+        try:
+            api.retweet(tweet_id)
+        except Exception, e:
+            return HttpResponseServerError()
+        return HttpResponse('{"retweeted":"True", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
+
+    #RTされている場合
+    else:
+        try:
+            api.retweet(tweet_id)
+        except Exception, e:
+            return HttpResponseServerError()
+        return HttpResponse('{"retweeted":"False", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
