@@ -107,7 +107,6 @@ class Lists(models.Model):
     name = models.CharField(u"リストの名前", max_length=30)
     full_name = models.CharField(u"リストのフルネーム", max_length=30)
     members = models.CharField(u"リストのフォロー", max_length=1000)
-    ctime = models.DateTimeField(u'登録日時',auto_now_add=True, editable=False)
     atime = models.DateTimeField(u'更新日時',auto_now=True, editable=False)
     user = models.ForeignKey(User, verbose_name=u'ユーザー')
 
@@ -116,6 +115,28 @@ class Lists(models.Model):
 
     class Meta:
         db_table = 'Lists'
+
+class RTTweet(models.Model):
+    wrapper_status_id = models.CharField(u"公式RT全体のID", max_length=30)
+    status_id = models.CharField(u"公式RTの内側のID", max_length=30)
+    ctime = models.DateTimeField(u'登録日時',auto_now_add=True, editable=False)
+    user = models.ForeignKey(User, verbose_name=u'ユーザー')
+
+    def __unicode__(self):
+        return "self.%s:%s" %(wrapper_status_id, status_id)
+
+    class Meta:
+        db_table = 'RTTweet'
+
+    @classmethod
+    def saveTweet(cls, request, tweet):
+
+        t = cls(
+            wrapper_status_id= tweet.id_str,
+            status_id = tweet.retweeted_status.id_str,
+            user = request.session.get('session_user'),
+           )
+        t.save()
 
 #class List(models.Model):
     #list1 = models.CharField(u"リストの名前1", max_length=30)

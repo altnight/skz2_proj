@@ -5,7 +5,7 @@ from django.views.generic.simple import direct_to_template
 #from django.shortcuts import get_object_or_404
 from django.utils import simplejson as json
 
-from skz2.models import User, Tweet, Lists
+from skz2.models import User, Tweet, Lists, RTTweet
 from skz2.mappers import TweetMapper, ListsMapper
 
 import tweepy
@@ -290,7 +290,7 @@ def toggleRT(request):
     api = tweepy.API(auth_handler=auth)
     tweet_id = request.GET.get('id')
 
-    #TODO:retweeted_by_me()から該当のtweetを探してdestroy_statusする
+    #TODO:他のクライアントからRTされた場合のRTの取り消し
     #RT状態をチェックする
     try:
         retweeted= api.get_status(tweet_id).retweeted
@@ -300,16 +300,19 @@ def toggleRT(request):
     #まだRTられてない場合
     if not retweeted:
         try:
-            api.retweet(tweet_id)
+            Tweet = api.retweet(tweet_id)
         except Exception, e:
             return HttpResponseServerError()
+        RTTweet.saveTweet(request, Tweet)
         return HttpResponse('{"retweeted":"True", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
 
-    return HttpResponse()
     #RTされている場合
-    #else:
-        #try:
-            #api.retweet(tweet_id)
-        #except Exception, e:
-            #return HttpResponseServerError()
-        #return HttpResponse('{"retweeted":"False", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
+    else:
+        wrapper_tweet = RTTweet.objects.filter(user=request.session.get('session_user')).get(status_id=tweet_id)
+        try:
+            api.destroy_status(wrapper_tweet.wrapper_status_id)
+        except Exception, e:
+            return HttpResponseServerError()
+        #重複させないためにdeliteする
+        RTTweet.objects.filter(user=request.session.get('session_user')).delete()
+        return HttpResponse('{"retweeted":"False", "tweet_id":"%s"}' % tweet_id, mimetype='application/json')
