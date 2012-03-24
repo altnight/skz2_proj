@@ -341,6 +341,17 @@ $ ->
     )
 
     #=========================
+    $('#config').on('click', ->
+        div = $('<div>')
+        div.attr('id', 'config_window')
+        $(document).append(div)
+        $("#config_window").css('display', 'block')
+    )
+
+
+    #=========================
+
+    #=========================
     #試験的に実行している
     #getHomeTimeline()
     #getLists()
@@ -349,5 +360,5 @@ $ ->
         getHomeTimeline()
         #getListTimeline("altnight", "skz", "True")
     #build_column = buildColumn()
-    mainStream()
+    #mainStream()
     #=========================

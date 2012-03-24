@@ -344,10 +344,16 @@
       protected = $("#" + id + " .protected").attr('alt');
       return toggleRT(id, protected);
     });
-    mainStream = function() {
+    $('#config').on('click', function() {
+      var div;
+      div = $('<div>');
+      div.attr('id', 'config_window');
+      $(document).append(div);
+      return $("#config_window").css('display', 'block');
+    });
+    return mainStream = function() {
       return getHomeTimeline();
     };
-    return mainStream();
   });
 
 }).call(this);
