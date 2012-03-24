@@ -191,6 +191,12 @@ $ ->
         time = createDateTimeFormat(new Date(arg.created_at))
         timelink.text(time)
 
+    createProtectedImg = ->
+        button = $('<img/>')
+        button.attr('src', 'static/image/protected.png')
+        button.attr('alt', 'protected')
+        button.attr('class', 'protected')
+
     createReplyButton = ->
         button = $('<img/>')
         button.attr('src', 'static/image/reply.png')
@@ -221,6 +227,8 @@ $ ->
            $("#column1").append(tweetdiv)
            tweetdiv.append(createImage(arg))
            tweetdiv.append(createUserName(arg))
+           if arg.protected
+               tweetdiv.append(createProtectedImg())
            tweetdiv.append(createText(arg))
            tweetdiv.append(createTimeLink(arg))
            tweetdiv.append(createReplyButton())
@@ -333,8 +341,8 @@ $ ->
     #getLists()
     #getListTimeline("__altnight__", "list2", "True")
     mainStream = ->
-        #getHomeTimeline()
-        getListTimeline("altnight", "skz", "True")
+        getHomeTimeline()
+        #getListTimeline("altnight", "skz", "True")
     #build_column = buildColumn()
     mainStream()
     #=========================
