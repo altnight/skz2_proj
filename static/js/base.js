@@ -324,6 +324,7 @@
       id = tweet.attr('id');
       screen_name = "@" + $("#" + id + " .user_icon").attr('alt');
       localStorage.in_reply_to_status_id = id;
+      $('#status').focus();
       return $('#status').val("" + screen_name + " ");
     });
     $('.fav').live('click', function() {
