@@ -266,7 +266,10 @@ $ ->
         else if json.favorited == "False"
             $("##{json.tweet_id} .fav").attr('src', './static/image/favorite.png')
 
-    toggleRT = (id) ->
+    toggleRT = (id, protected) ->
+        if protected == "protected"
+            alert "鍵垢です"
+            return false
         $.ajax
             type: "GET"
             url: "http://192.168.56.101:8000/toggleRT"
@@ -333,7 +336,8 @@ $ ->
     $('.retweet').live('click', ->
         tweet = $(@).parent()
         id = tweet.attr('id')
-        toggleRT(id)
+        protected = $("##{id} .protected").attr('alt')
+        toggleRT(id, protected)
     )
 
     #=========================

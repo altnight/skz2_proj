@@ -289,7 +289,11 @@
         return $("#" + json.tweet_id + " .fav").attr('src', './static/image/favorite.png');
       }
     };
-    toggleRT = function(id) {
+    toggleRT = function(id, protected) {
+      if (protected === "protected") {
+        alert("鍵垢です");
+        return false;
+      }
       return $.ajax({
         type: "GET",
         url: "http://192.168.56.101:8000/toggleRT",
@@ -334,10 +338,11 @@
       return toggleFav(id);
     });
     $('.retweet').live('click', function() {
-      var id, tweet;
+      var id, protected, tweet;
       tweet = $(this).parent();
       id = tweet.attr('id');
-      return toggleRT(id);
+      protected = $("#" + id + " .protected").attr('alt');
+      return toggleRT(id, protected);
     });
     mainStream = function() {
       return getHomeTimeline();
