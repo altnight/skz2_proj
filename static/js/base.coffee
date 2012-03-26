@@ -240,12 +240,6 @@ $ ->
                tweetdiv.append(createRTSpan(arg))
                tweetdiv.append(createRTcount(arg))
 
-    buildColumn = ->
-        column_id = 0
-        incID: ->
-            column_id++
-        getCloumnID: ->
-            return column_id
 
     toggleFav = (id) ->
         $.ajax
@@ -341,12 +335,22 @@ $ ->
     )
 
     #=========================
-    $('#config').on('click', ->
-        div = $('<div>')
-        div.attr('id', 'config_window')
-        $(document).append(div)
-        $("#config_window").css('display', 'block')
+    $('#config').on('click', (ev)->
+        if $('#config_window').css('display') == "none"
+            $("#config_window").css('display', 'block')
+        else
+            $("#config_window").css('display', 'none')
     )
+    $('#addColumn').on('click', (ev)->
+        column_id = build_column.incID()
+        #$("column#{column_id}").append(getHomeTimeline())
+    )
+    buildColumn = ->
+        column_id = 0
+        incID: ->
+            column_id++
+        getCloumnID: ->
+            return column_id
 
 
     #=========================
@@ -359,6 +363,6 @@ $ ->
     mainStream = ->
         getHomeTimeline()
         #getListTimeline("altnight", "skz", "True")
-    #build_column = buildColumn()
+    build_column = buildColumn()
     #mainStream()
     #=========================

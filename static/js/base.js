@@ -1,7 +1,7 @@
 (function() {
 
   $(function() {
-    var buildColumn, buildStream, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createProtectedImg, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, toggleFav, toggleFavView, toggleRT, toggleRTView, twitter_url;
+    var buildColumn, buildStream, build_column, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createProtectedImg, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, toggleFav, toggleFavView, toggleRT, toggleRTView, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -254,18 +254,6 @@
       }
       return _results;
     };
-    buildColumn = function() {
-      var column_id;
-      column_id = 0;
-      return {
-        incID: function() {
-          return column_id++;
-        },
-        getCloumnID: function() {
-          return column_id;
-        }
-      };
-    };
     toggleFav = function(id) {
       return $.ajax({
         type: "GET",
@@ -344,16 +332,33 @@
       protected = $("#" + id + " .protected").attr('alt');
       return toggleRT(id, protected);
     });
-    $('#config').on('click', function() {
-      var div;
-      div = $('<div>');
-      div.attr('id', 'config_window');
-      $(document).append(div);
-      return $("#config_window").css('display', 'block');
+    $('#config').on('click', function(ev) {
+      if ($('#config_window').css('display') === "none") {
+        return $("#config_window").css('display', 'block');
+      } else {
+        return $("#config_window").css('display', 'none');
+      }
     });
-    return mainStream = function() {
+    $('#addColumn').on('click', function(ev) {
+      var column_id;
+      return column_id = build_column.incID();
+    });
+    buildColumn = function() {
+      var column_id;
+      column_id = 0;
+      return {
+        incID: function() {
+          return column_id++;
+        },
+        getCloumnID: function() {
+          return column_id;
+        }
+      };
+    };
+    mainStream = function() {
       return getHomeTimeline();
     };
+    return build_column = buildColumn();
   });
 
 }).call(this);
