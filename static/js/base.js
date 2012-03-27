@@ -1,7 +1,7 @@
 (function() {
 
   $(function() {
-    var buildColumn, buildStream, build_column, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createProtectedImg, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, mainStream, max_length, toggleFav, toggleFavView, toggleRT, toggleRTView, twitter_url;
+    var buildColumn, buildStream, build_column, createAPILimitFormat, createDateTimeFormat, createFavButton, createImage, createProtectedImg, createRTButton, createRTImg, createRTSpan, createRTcount, createReplyButton, createText, createTimeLink, createTweetdiv, createUserName, getAPILimit, getCurrentDate, getHomeTimeline, getListTimeline, getLists, max_length, readCallback, reload, toggleFav, toggleFavView, toggleRT, toggleRTView, twitter_url;
     $('#status').on('focus', function() {
       $(this).css('rows', 8);
       $(this).css('cols', 80);
@@ -29,7 +29,7 @@
             q: $(this).val(),
             in_reply_to_status_id: localStorage.in_reply_to_status_id
           },
-          url: "http://192.168.56.101:8000/update_status",
+          url: "http://127.0.0.1:8000/update_status",
           dataTpye: "json",
           success: function() {
             alert("発言しました");
@@ -64,7 +64,6 @@
       seconds = ("0" + d.getSeconds()).slice(-2);
       return "" + year + "/" + month + "/" + date + " " + hour + ":" + minutes + ":" + seconds;
     };
-    $('#current_date').append(createDateTimeFormat(getCurrentDate()));
     createAPILimitFormat = function(json) {
       var hourly_limit, remaining, reset_time;
       remaining = json.remaining;
@@ -75,7 +74,7 @@
     getAPILimit = function() {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/get_api_limit",
+        url: "http://127.0.0.1:8000/get_api_limit",
         dataTpye: "json",
         success: function(json) {
           return $('#api_limit').append(createAPILimitFormat(json));
@@ -85,14 +84,13 @@
         }
       });
     };
-    getAPILimit();
-    getHomeTimeline = function() {
+    getHomeTimeline = function(column_id) {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/get_home_timeline",
+        url: "http://127.0.0.1:8000/get_home_timeline",
         dataTpye: "json",
         success: function(json) {
-          return buildStream(json);
+          return buildStream(json, column_id);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           return alert("さーせん、うまくとれなかったっす");
@@ -102,7 +100,7 @@
     getLists = function() {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/get_lists",
+        url: "http://127.0.0.1:8000/get_lists",
         dataTpye: "json",
         success: function(json) {
           return console.log(json);
@@ -112,13 +110,13 @@
         }
       });
     };
-    getListTimeline = function(list_owner, list_name, include_rts) {
+    getListTimeline = function(list_owner, list_name, include_rts, column_id) {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
+        url: "http://127.0.0.1:8000/get_list_timeline/" + list_owner + "/" + list_name + "/?rts=" + include_rts,
         dataTpye: "json",
         success: function(json) {
-          return buildStream(json);
+          return buildStream(json, column_id);
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
           return alert("さーせん、うまくとれなかったっす");
@@ -229,13 +227,13 @@
       button.attr('alt', 'RTButton');
       return button.attr('class', 'retweet');
     };
-    buildStream = function(json) {
+    buildStream = function(json, column_id) {
       var arg, tweetdiv, _i, _len, _results;
       _results = [];
       for (_i = 0, _len = json.length; _i < _len; _i++) {
         arg = json[_i];
         tweetdiv = createTweetdiv(arg);
-        $("#column1").append(tweetdiv);
+        $("#column" + column_id).append(tweetdiv);
         tweetdiv.append(createImage(arg));
         tweetdiv.append(createUserName(arg));
         if (arg.protected) tweetdiv.append(createProtectedImg());
@@ -257,7 +255,7 @@
     toggleFav = function(id) {
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/toggleFav",
+        url: "http://127.0.0.1:8000/toggleFav",
         data: {
           id: id
         },
@@ -284,7 +282,7 @@
       }
       return $.ajax({
         type: "GET",
-        url: "http://192.168.56.101:8000/toggleRT",
+        url: "http://127.0.0.1:8000/toggleRT",
         data: {
           id: id
         },
@@ -352,13 +350,32 @@
         },
         getCloumnID: function() {
           return column_id;
+        },
+        resetCloumnID: function() {
+          return column_id = 0;
         }
       };
     };
-    mainStream = function() {
-      return getHomeTimeline();
+    readCallback = function() {
+      build_column.incID();
+      getHomeTimeline(build_column.getCloumnID());
+      build_column.incID();
+      getListTimeline("altnight", "javascript", "True", build_column.getCloumnID());
+      build_column.incID();
+      getListTimeline("altnight", "net", "True", build_column.getCloumnID());
+      build_column.incID();
+      getListTimeline("altnight", "jz", "True", build_column.getCloumnID());
+      build_column.incID();
+      getListTimeline("altnight", "py", "True", build_column.getCloumnID());
+      return build_column.resetCloumnID();
     };
-    return build_column = buildColumn();
+    build_column = buildColumn();
+    $('#current_date').append(createDateTimeFormat(getCurrentDate()));
+    getAPILimit();
+    readCallback();
+    return reload = setInterval(function() {
+      return location.reload();
+    }, 4 * 60 * 1000);
   });
 
 }).call(this);

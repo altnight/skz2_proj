@@ -108,7 +108,7 @@ def get_home_timeline(request):
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    home_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:200]
+    home_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).order_by('-ctime')[:100]
 
     home_timeline_dict = [TweetMapper(obj).as_dict() for obj in home_timeline_query]
     home_timeline_json = json.dumps(home_timeline_dict)
@@ -235,7 +235,7 @@ def get_list_timeline(request, list_owner, list_name):
         text = expandURL(tweet)
         Tweet.saveTweet(request, tweet, text, old_tweet)
 
-    list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).filter(screen_name__in=list_members).order_by('-ctime')[:200]
+    list_timeline_query = Tweet.objects.filter(user=request.session.get('session_user')).filter(screen_name__in=list_members).order_by('-ctime')[:100]
 
     list_timeline_dict = [TweetMapper(obj).as_dict() for obj in list_timeline_query]
     list_timeline_json = json.dumps(list_timeline_dict)

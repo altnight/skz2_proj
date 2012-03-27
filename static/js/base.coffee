@@ -27,8 +27,8 @@ $ ->
                 data:
                     q: $(@).val()
                     in_reply_to_status_id: localStorage.in_reply_to_status_id
-                url: "http://192.168.56.101:8000/update_status"
-                #url: "http://127.0.0.1:8000/update_status"
+                #url: "http://192.168.56.101:8000/update_status"
+                url: "http://127.0.0.1:8000/update_status"
                 dataTpye: "json"
                 success: =>
                     alert "発言しました"
@@ -62,7 +62,7 @@ $ ->
         seconds = ("0" + d.getSeconds()).slice(-2)
         return "#{year}/#{month}/#{date} #{hour}:#{minutes}:#{seconds}"
 
-    $('#current_date').append(createDateTimeFormat(getCurrentDate()))
+    #$('#current_date').append(createDateTimeFormat(getCurrentDate()))
     #=========================
 
 
@@ -78,8 +78,8 @@ $ ->
     getAPILimit = ->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_api_limit"
-            #url: "http://127.0.0.1:8000/get_api_limit"
+            #url: "http://192.168.56.101:8000/get_api_limit"
+            url: "http://127.0.0.1:8000/get_api_limit"
             dataTpye: "json"
             success: (json) ->
                 $('#api_limit').append(createAPILimitFormat(json))
@@ -87,41 +87,41 @@ $ ->
                 $('#api_limit').append("さーせん、うまくいかなかったっす")
 
 
-    getAPILimit()
+    #getAPILimit()
     #=========================
 
     #ajaxでとってくる
     #=========================
-    getHomeTimeline = ->
+    getHomeTimeline = (column_id)->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_home_timeline"
-            #url: "http://127.0.0.1:8000/get_home_timeline"
+            #url: "http://192.168.56.101:8000/get_home_timeline"
+            url: "http://127.0.0.1:8000/get_home_timeline"
             dataTpye: "json"
             success: (json) ->
-                buildStream(json)
+                buildStream(json, column_id)
             error: (XMLHttpRequest, textStatus, errorThrown)->
                 alert "さーせん、うまくとれなかったっす"
 
     getLists = ->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_lists"
-            #url: "http://127.0.0.1:8000/get_lists"
+            #url: "http://192.168.56.101:8000/get_lists"
+            url: "http://127.0.0.1:8000/get_lists"
             dataTpye: "json"
             success: (json) ->
                 console.log json
             error: (XMLHttpRequest, textStatus, errorThrown)->
                 alert "さーせん、うまくとれなかったっす"
 
-    getListTimeline = (list_owner, list_name, include_rts)->
+    getListTimeline = (list_owner, list_name, include_rts, column_id)->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
-            #url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            #url: "http://192.168.56.101:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
+            url: "http://127.0.0.1:8000/get_list_timeline/#{list_owner}/#{list_name}/?rts=#{include_rts}"
             dataTpye: "json"
             success: (json) ->
-                buildStream(json)
+                buildStream(json, column_id)
             error: (XMLHttpRequest, textStatus, errorThrown)->
                 alert "さーせん、うまくとれなかったっす"
 
@@ -221,31 +221,31 @@ $ ->
         button.attr('alt', 'RTButton')
         button.attr('class', 'retweet')
 
-    buildStream = (json) ->
-       for arg in json
-           tweetdiv = createTweetdiv(arg)
-           $("#column1").append(tweetdiv)
-           tweetdiv.append(createImage(arg))
-           tweetdiv.append(createUserName(arg))
-           if arg.protected
-               tweetdiv.append(createProtectedImg())
-           tweetdiv.append(createText(arg))
-           tweetdiv.append(createTimeLink(arg))
-           tweetdiv.append(createReplyButton())
-           tweetdiv.append(createFavButton(arg))
-           tweetdiv.append(createRTButton(arg))
-           #公式RTの場合
-           if arg.old_tweet_screen_name
-               tweetdiv.append(createRTImg(arg))
-               tweetdiv.append(createRTSpan(arg))
-               tweetdiv.append(createRTcount(arg))
+    buildStream = (json, column_id) ->
+        for arg in json
+            tweetdiv = createTweetdiv(arg)
+            $("#column#{column_id}").append(tweetdiv)
+            tweetdiv.append(createImage(arg))
+            tweetdiv.append(createUserName(arg))
+            if arg.protected
+                tweetdiv.append(createProtectedImg())
+            tweetdiv.append(createText(arg))
+            tweetdiv.append(createTimeLink(arg))
+            tweetdiv.append(createReplyButton())
+            tweetdiv.append(createFavButton(arg))
+            tweetdiv.append(createRTButton(arg))
+            #公式RTの場合
+            if arg.old_tweet_screen_name
+                tweetdiv.append(createRTImg(arg))
+                tweetdiv.append(createRTSpan(arg))
+                tweetdiv.append(createRTcount(arg))
 
 
     toggleFav = (id) ->
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/toggleFav"
-            #url: "http://127.0.0.1:8000/toggleFav"
+            #url: "http://192.168.56.101:8000/toggleFav"
+            url: "http://127.0.0.1:8000/toggleFav"
             data:
                 id: id
             dataTpye: "json"
@@ -266,8 +266,8 @@ $ ->
             return false
         $.ajax
             type: "GET"
-            url: "http://192.168.56.101:8000/toggleRT"
-            #url: "http://127.0.0.1:8000/toggleRT"
+            #url: "http://192.168.56.101:8000/toggleRT"
+            url: "http://127.0.0.1:8000/toggleRT"
             data:
                 id: id
             dataTpye: "json"
@@ -351,7 +351,21 @@ $ ->
             column_id++
         getCloumnID: ->
             return column_id
+        resetCloumnID: ->
+            column_id = 0
 
+    readCallback = ->
+        build_column.incID()
+        getHomeTimeline(build_column.getCloumnID())
+        build_column.incID()
+        getListTimeline("altnight", "javascript", "True", build_column.getCloumnID())
+        build_column.incID()
+        getListTimeline("altnight", "net", "True", build_column.getCloumnID())
+        build_column.incID()
+        getListTimeline("altnight", "jz", "True", build_column.getCloumnID())
+        build_column.incID()
+        getListTimeline("altnight", "py", "True", build_column.getCloumnID())
+        build_column.resetCloumnID()
 
     #=========================
 
@@ -360,9 +374,16 @@ $ ->
     #getHomeTimeline()
     #getLists()
     #getListTimeline("__altnight__", "list2", "True")
-    mainStream = ->
-        getHomeTimeline()
+    #mainStream = ->
+        #getHomeTimeline()
         #getListTimeline("altnight", "skz", "True")
     build_column = buildColumn()
+
+    #Main
+    $('#current_date').append(createDateTimeFormat(getCurrentDate()))
+    getAPILimit()
+    readCallback()
+    reload = setInterval( -> location.reload()
+    4*60*1000)
     #mainStream()
     #=========================
